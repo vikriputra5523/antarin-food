@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Antarin Food - Aplikasi Konsumen Resmi</title>
+  <title>Antarin Food - Aplikasi Konsumen</title>
 
   <!-- CSS MapLibre GL -->
   <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
@@ -145,28 +145,24 @@
 
 <div class="app-screen">
 
-  <!-- HALAMAN LOGIN / REGISTER (FIREBASE AUTH) -->
+  <!-- HALAMAN LOGIN / REGISTER (GOOGLE + WAJIB INPUT NO HP) -->
   <div class="auth-screen" id="authScreen">
     <div class="auth-logo">Antarin Food</div>
-    <div class="auth-subtitle">Masuk dengan Akun Google atau Nomor HP Resmi</div>
+    <div class="auth-subtitle">Masuk dengan Akun Google untuk melanjutkan</div>
 
-    <div id="authStep1">
+    <!-- TAHAP 1: TOMBOL GOOGLE -->
+    <div id="authStepGoogle">
       <button class="auth-btn google" onclick="loginGoogleAsli()">
-        <span>🌐</span> Masuk dengan Akun Google Asli
+        <span>🌐</span> Masuk dengan Akun Google
       </button>
-      <div style="text-align: center; margin: 12px 0; font-size: 12px; color: #880;">Atau dengan Nomor HP (SMS OTP)</div>
-      <input type="tel" id="inputNoHP" class="auth-input" placeholder="Contoh: +6281234567890">
-      <button class="auth-btn primary" onclick="kirimOTPSMS()">Kirim SMS OTP</button>
-      
-      <!-- Container reCAPTCHA wajib untuk Firebase Phone Auth -->
-      <div id="recaptcha-container" style="margin-top: 10px;"></div>
     </div>
 
-    <div id="authStep2" style="display: none;">
-      <div style="font-size: 13px; color: #444; margin-bottom: 8px;">Masukkan 6 digit kode OTP yang dikirim melalui SMS ke nomor Anda:</div>
-      <input type="text" id="inputOTP" class="auth-input" placeholder="Masukkan 6 digit OTP" maxlength="6">
-      <button class="auth-btn primary" onclick="verifikasiOTPSMS()">Verifikasi Kode OTP</button>
-      <button class="auth-btn" style="background: transparent; border: none; color: #666;" onclick="kembaliKeStep1()">← Ubah Nomor HP</button>
+    <!-- TAHAP 2: WAJIB MASUKKAN NO HP SETELAH GOOGLE -->
+    <div id="authStepPhone" style="display: none;">
+      <div style="font-size: 13px; color: #333; margin-bottom: 8px; font-weight: bold;">Langkah Terakhir: Masukkan Nomor WhatsApp / HP Aktif</div>
+      <div style="font-size: 11px; color: #666; margin-bottom: 12px;">Nomor ini dibutuhkan driver untuk menghubungi Anda saat pengantaran makanan.</div>
+      <input type="tel" id="inputNoHPCustomer" class="auth-input" placeholder="Contoh: 081234567890">
+      <button class="auth-btn primary" onclick="simpanNomorHPProfil()">Simpan & Masuk ke Aplikasi</button>
     </div>
   </div>
 
@@ -241,7 +237,7 @@
           <div class="account-menu-left"><span class="account-menu-icon">🎧</span><span>Pusat Bantuan & Layanan</span></div>
           <span>›</span>
         </div>
-        <div class="account-menu-item" onclick="alert('Antarin Food v1.5.0 - Full Firebase Edition.')">
+        <div class="account-menu-item" onclick="alert('Antarin Food v1.6.0 - Google + Phone Integration.')">
           <div class="account-menu-left"><span class="account-menu-icon">ℹ️</span><span>Tentang Aplikasi Antarin</span></div>
           <span>›</span>
         </div>
@@ -359,7 +355,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
   import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
-  import { getAuth, GoogleAuthProvider, signInWithPopup, RecaptchaVerifier, signInWithPhoneNumber, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyADyLlYQwBtgNmbnS5K6yhiV7sm6MTn1Wo",
@@ -380,71 +376,43 @@
   window.firebaseRef = ref;
   window.firebaseSet = set;
 
-  // 1. Fungsi Login Google Asli
+  let googleUserTemp = null;
+
+  // 1. Login Google Asli (Gratis & Bebas Error Billing)
   window.loginGoogleAsli = function() {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then((result) => {
-        const user = result.user;
-        localStorage.setItem('antarin_user', user.email || user.displayName);
-        location.reload();
+        googleUserTemp = result.user;
+        // Cek apakah user ini sudah pernah simpan nomor HP di localstorage sebelumnya
+        let savedPhone = localStorage.getItem('antarin_phone_' + googleUserTemp.email);
+        if (savedPhone) {
+          localStorage.setItem('antarin_user', googleUserTemp.displayName + " (" + savedPhone + ")");
+          location.reload();
+        } else {
+          // Jika belum, arahkan ke tahap input nomor HP
+          document.getElementById('authStepGoogle').style.display = 'none';
+          document.getElementById('authStepPhone').style.display = 'block';
+        }
       })
       .catch((error) => {
         alert("Login Google Gagal: " + error.message);
       });
   };
 
-  // 2. Fungsi Kirim OTP SMS Asli
-  window.recaptchaVerifier = null;
-  window.confirmationResultGlobal = null;
-
-  window.kirimOTPSMS = function() {
-    const phoneNumber = document.getElementById('inputNoHP').value;
-    if (!phoneNumber || phoneNumber.length < 10) {
-      alert("Masukkan nomor HP yang valid (contoh dengan kode negara: +628123... )");
+  // 2. Simpan Nomor HP yang diinput customer setelah login Google
+  window.simpanNomorHPProfil = function() {
+    const noHp = document.getElementById('inputNoHPCustomer').value.trim();
+    if (!noHp || noHp.length < 10) {
+      alert("Masukkan nomor HP yang valid (minimal 10 digit).");
       return;
     }
 
-    if (!window.recaptchaVerifier) {
-      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-        'size': 'normal',
-        'callback': (response) => {}
-      });
-      window.recaptchaVerifier.render();
-    }
-
-    signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
-      .then((confirmationResult) => {
-        window.confirmationResultGlobal = confirmationResult;
-        document.getElementById('authStep1').style.display = 'none';
-        document.getElementById('authStep2').style.display = 'block';
-        alert("Kode OTP SMS berhasil dikirim ke nomor Anda!");
-      }).catch((error) => {
-        alert("Gagal mengirim SMS OTP: " + error.message);
-        if (window.recaptchaVerifier) window.recaptchaVerifier.clear();
-      });
-  };
-
-  // 3. Verifikasi Kode OTP SMS
-  window.verifikasiOTPSMS = function() {
-    const code = document.getElementById('inputOTP').value;
-    if (!code || code.length !== 6) {
-      alert("Masukkan 6 digit kode OTP dengan benar.");
-      return;
-    }
-
-    window.confirmationResultGlobal.confirm(code).then((result) => {
-      const user = result.user;
-      localStorage.setItem('antarin_user', user.phoneNumber);
+    if (googleUserTemp) {
+      localStorage.setItem('antarin_phone_' + googleUserTemp.email, noHp);
+      localStorage.setItem('antarin_user', googleUserTemp.displayName + " - " + noHp);
       location.reload();
-    }).catch((error) => {
-      alert("Kode OTP salah atau kedaluwarsa: " + error.message);
-    });
-  };
-
-  window.kembaliKeStep1 = function() {
-    document.getElementById('authStep2').style.display = 'none';
-    document.getElementById('authStep1').style.display = 'block';
+    }
   };
 
   window.logoutAkun = function() {
@@ -487,8 +455,8 @@
       const initial = currentUser.charAt(0).toUpperCase();
       document.getElementById('userInitialTopBtn').innerText = initial;
       document.getElementById('akunProfileBig').innerText = initial;
-      document.getElementById('akunNamaUser').innerText = "Customer Terverifikasi";
-      document.getElementById('akunKontakUser').innerText = currentUser;
+      document.getElementById('akunNamaUser').innerText = currentUser.split(' - ')[0] || "Customer";
+      document.getElementById('akunKontakUser').innerText = currentUser.split(' - ')[1] || currentUser;
     }
   }
 
