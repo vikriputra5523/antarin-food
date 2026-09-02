@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Antarin Food - Aplikasi Konsumen</title>
+  <title>Antarin Food - Aplikasi Konsumen Resmi</title>
 
   <!-- CSS MapLibre GL -->
   <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
@@ -71,7 +71,7 @@
     .account-avatar-large { width: 56px; height: 56px; background: #00880c; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: bold; flex-shrink: 0; }
     .account-info-text { display: flex; flex-direction: column; gap: 4px; }
     .account-name { font-size: 16px; font-weight: bold; color: #111; }
-    .account-phone { font-size: 13px; color: #666; }
+    .account-phone { font-size: 13px; color: #666; word-break: break-all; }
     .account-badge { font-size: 11px; background: #e8f5e9; color: #00880c; padding: 2px 8px; border-radius: 6px; font-weight: bold; display: inline-block; width: fit-content; margin-top: 2px; }
 
     .account-menu-group { background: white; border: 1px solid #e0e0e0; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
@@ -145,29 +145,32 @@
 
 <div class="app-screen">
 
-  <!-- HALAMAN LOGIN / REGISTER -->
+  <!-- HALAMAN LOGIN / REGISTER (FIREBASE AUTH) -->
   <div class="auth-screen" id="authScreen">
     <div class="auth-logo">Antarin Food</div>
-    <div class="auth-subtitle">Masuk untuk mulai pesan makanan favoritmu</div>
+    <div class="auth-subtitle">Masuk dengan Akun Google atau Nomor HP Resmi</div>
 
     <div id="authStep1">
-      <button class="auth-btn google" onclick="loginGoogleSimulasi()">
-        <span>🌐</span> Masuk dengan Akun Google
+      <button class="auth-btn google" onclick="loginGoogleAsli()">
+        <span>🌐</span> Masuk dengan Akun Google Asli
       </button>
-      <div style="text-align: center; margin: 12px 0; font-size: 12px; color: #880;">Atau dengan Nomor HP</div>
-      <input type="tel" id="inputNoHP" class="auth-input" placeholder="Contoh: 081234567890">
-      <button class="auth-btn primary" onclick="kirimKodeOTP()">Kirim Kode OTP</button>
+      <div style="text-align: center; margin: 12px 0; font-size: 12px; color: #880;">Atau dengan Nomor HP (SMS OTP)</div>
+      <input type="tel" id="inputNoHP" class="auth-input" placeholder="Contoh: +6281234567890">
+      <button class="auth-btn primary" onclick="kirimOTPSMS()">Kirim SMS OTP</button>
+      
+      <!-- Container reCAPTCHA wajib untuk Firebase Phone Auth -->
+      <div id="recaptcha-container" style="margin-top: 10px;"></div>
     </div>
 
     <div id="authStep2" style="display: none;">
-      <div style="font-size: 13px; color: #444; margin-bottom: 8px;">Masukkan 4 digit kode OTP yang dikirim ke nomor HP kamu (Simulasi OTP: <strong style="color: #00880c;">1234</strong>)</div>
-      <input type="text" id="inputOTP" class="auth-input" placeholder="Masukkan 4 digit OTP" maxlength="4">
-      <button class="auth-btn primary" onclick="verifikasiOTP()">Verifikasi & Masuk</button>
+      <div style="font-size: 13px; color: #444; margin-bottom: 8px;">Masukkan 6 digit kode OTP yang dikirim melalui SMS ke nomor Anda:</div>
+      <input type="text" id="inputOTP" class="auth-input" placeholder="Masukkan 6 digit OTP" maxlength="6">
+      <button class="auth-btn primary" onclick="verifikasiOTPSMS()">Verifikasi Kode OTP</button>
       <button class="auth-btn" style="background: transparent; border: none; color: #666;" onclick="kembaliKeStep1()">← Ubah Nomor HP</button>
     </div>
   </div>
 
-  <!-- VIEW 1: BERANDA KONSUMEN (CUSTOMER) -->
+  <!-- VIEW 1: BERANDA KONSUMEN -->
   <div class="app-view active" id="viewCustomerBeranda">
     <div class="top-bar">
       <div class="search-box">
@@ -209,9 +212,7 @@
     <div class="page-header" style="position:static;">
       <span class="page-title" style="color:#00880c;">📋 Riwayat Pesanan</span>
     </div>
-    <div class="history-container" id="historyListContainer">
-      <!-- Data riwayat dirender via JS -->
-    </div>
+    <div class="history-container" id="historyListContainer"></div>
   </div>
 
   <!-- VIEW 3: CHAT -->
@@ -226,8 +227,6 @@
       <span class="page-title" style="color:#00880c;">👤 Pengaturan Akun</span>
     </div>
     <div class="account-container">
-      
-      <!-- Profil Box -->
       <div class="account-profile-box">
         <div class="account-avatar-large" id="akunProfileBig">U</div>
         <div class="account-info-text">
@@ -237,36 +236,20 @@
         </div>
       </div>
 
-      <!-- Menu Daftar Pengaturan -->
       <div class="account-menu-group">
-        <div class="account-menu-item" onclick="alert('Fitur edit profil segera hadir.')">
-          <div class="account-menu-left">
-            <span class="account-menu-icon">✏️</span>
-            <span>Ubah Profil & Nama</span>
-          </div>
-          <span>›</span>
-        </div>
         <div class="account-menu-item" onclick="alert('Pusat Bantuan Antarin Food 24/7 siap melayani kendala pesananmu.')">
-          <div class="account-menu-left">
-            <span class="account-menu-icon">🎧</span>
-            <span>Pusat Bantuan & Layanan</span>
-          </div>
+          <div class="account-menu-left"><span class="account-menu-icon">🎧</span><span>Pusat Bantuan & Layanan</span></div>
           <span>›</span>
         </div>
-        <div class="account-menu-item" onclick="alert('Antarin Food v1.4.0 - Consumer Cloud Edition.')">
-          <div class="account-menu-left">
-            <span class="account-menu-icon">ℹ️</span>
-            <span>Tentang Aplikasi Antarin</span>
-          </div>
+        <div class="account-menu-item" onclick="alert('Antarin Food v1.5.0 - Full Firebase Edition.')">
+          <div class="account-menu-left"><span class="account-menu-icon">ℹ️</span><span>Tentang Aplikasi Antarin</span></div>
           <span>›</span>
         </div>
       </div>
 
-      <!-- Tombol Keluar -->
       <button class="auth-btn" style="border-color: #d32f2f; color: #d32f2f; margin-top: 8px;" onclick="logoutAkun()">
         🚪 Keluar dari Akun
       </button>
-
     </div>
   </div>
 
@@ -293,7 +276,6 @@
       </div>
       <div class="map-hint" id="mapHintText">📍 Geser peta untuk memilih Lokasi Resto / Penjemputan</div>
 
-      <!-- PILIHAN TIER BARANG -->
       <div class="route-card" id="tierCard" style="display:none; padding:10px 14px;">
         <div style="font-size:12px; font-weight:bold; margin-bottom:6px; color:#444;" id="tierLabelTitle">📦 Ukuran / Berat Barang:</div>
         <div style="display:flex; gap:8px;">
@@ -302,7 +284,6 @@
         </div>
       </div>
 
-      <!-- FORM ASAL & TUJUAN -->
       <div class="route-card">
         <div class="autocomplete-wrapper">
           <div class="route-input-group active-focus" id="groupAsal">
@@ -321,7 +302,6 @@
         </div>
       </div>
 
-      <!-- PILIHAN METODE PEMBAYARAN (CASH / QRIS) -->
       <div class="route-card" style="padding: 12px 14px;">
         <div style="font-size: 12px; font-weight: bold; margin-bottom: 6px; color: #444;">💳 Metode Pembayaran:</div>
         <div class="payment-options-dropdown">
@@ -330,7 +310,6 @@
         </div>
       </div>
 
-      <!-- CHECKOUT CARD -->
       <div class="checkout-card">
         <div class="price-row"><span>Perkiraan Jarak</span><strong id="textJarakKM">0.0 KM</strong></div>
         <div class="price-row"><span>Tarif Perjalanan</span><strong id="textTarifOngkir">Rp 0</strong></div>
@@ -376,15 +355,16 @@
 <!-- JS MapLibre GL -->
 <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
 
-<!-- Firebase SDK (Modular v11/v12) -->
+<!-- Firebase SDK & Modular Auth Integration -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
   import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, RecaptchaVerifier, signInWithPhoneNumber, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyADyLlYQwBtgNmbnS5K6yhiV7sm6MTn1Wo",
     authDomain: "antarinapp.firebaseapp.com",
-    databaseURL: "https://antarinapp-default-rtdb.asia-southeast1.firebasedatabase.app/",
+    databaseURL: "https://antarinapp-default-rtdb.asia-southeast1.firebasedatabase.app",
     projectId: "antarinapp",
     storageBucket: "antarinapp.firebasestorage.app",
     messagingSenderId: "356066845151",
@@ -394,10 +374,87 @@
 
   const app = initializeApp(firebaseConfig);
   const db = getDatabase(app);
+  const auth = getAuth(app);
+
   window.firebaseDb = db;
-  window.firebasePush = push;
   window.firebaseRef = ref;
   window.firebaseSet = set;
+
+  // 1. Fungsi Login Google Asli
+  window.loginGoogleAsli = function() {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        localStorage.setItem('antarin_user', user.email || user.displayName);
+        location.reload();
+      })
+      .catch((error) => {
+        alert("Login Google Gagal: " + error.message);
+      });
+  };
+
+  // 2. Fungsi Kirim OTP SMS Asli
+  window.recaptchaVerifier = null;
+  window.confirmationResultGlobal = null;
+
+  window.kirimOTPSMS = function() {
+    const phoneNumber = document.getElementById('inputNoHP').value;
+    if (!phoneNumber || phoneNumber.length < 10) {
+      alert("Masukkan nomor HP yang valid (contoh dengan kode negara: +628123... )");
+      return;
+    }
+
+    if (!window.recaptchaVerifier) {
+      window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+        'size': 'normal',
+        'callback': (response) => {}
+      });
+      window.recaptchaVerifier.render();
+    }
+
+    signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
+      .then((confirmationResult) => {
+        window.confirmationResultGlobal = confirmationResult;
+        document.getElementById('authStep1').style.display = 'none';
+        document.getElementById('authStep2').style.display = 'block';
+        alert("Kode OTP SMS berhasil dikirim ke nomor Anda!");
+      }).catch((error) => {
+        alert("Gagal mengirim SMS OTP: " + error.message);
+        if (window.recaptchaVerifier) window.recaptchaVerifier.clear();
+      });
+  };
+
+  // 3. Verifikasi Kode OTP SMS
+  window.verifikasiOTPSMS = function() {
+    const code = document.getElementById('inputOTP').value;
+    if (!code || code.length !== 6) {
+      alert("Masukkan 6 digit kode OTP dengan benar.");
+      return;
+    }
+
+    window.confirmationResultGlobal.confirm(code).then((result) => {
+      const user = result.user;
+      localStorage.setItem('antarin_user', user.phoneNumber);
+      location.reload();
+    }).catch((error) => {
+      alert("Kode OTP salah atau kedaluwarsa: " + error.message);
+    });
+  };
+
+  window.kembaliKeStep1 = function() {
+    document.getElementById('authStep2').style.display = 'none';
+    document.getElementById('authStep1').style.display = 'block';
+  };
+
+  window.logoutAkun = function() {
+    signOut(auth).then(() => {
+      localStorage.removeItem('antarin_user');
+      location.reload();
+    }).catch((error) => {
+      alert("Gagal keluar: " + error.message);
+    });
+  };
 </script>
 
 <script>
@@ -430,7 +487,7 @@
       const initial = currentUser.charAt(0).toUpperCase();
       document.getElementById('userInitialTopBtn').innerText = initial;
       document.getElementById('akunProfileBig').innerText = initial;
-      document.getElementById('akunNamaUser').innerText = currentUser === "Google User" ? "Pengguna Google" : "Customer Terverifikasi";
+      document.getElementById('akunNamaUser').innerText = "Customer Terverifikasi";
       document.getElementById('akunKontakUser').innerText = currentUser;
     }
   }
@@ -452,48 +509,6 @@
     } else if (tab === 'akun') {
       document.getElementById('viewAkun').classList.add('active');
       document.getElementById('navAkun').classList.add('active');
-    }
-  }
-
-  function loginGoogleSimulasi() {
-    currentUser = "Google User (budi@gmail.com)";
-    localStorage.setItem('antarin_user', currentUser);
-    cekStatusLogin();
-  }
-
-  let temporaryPhone = "";
-  function kirimKodeOTP() {
-    const hp = document.getElementById('inputNoHP').value;
-    if (!hp || hp.length < 10) {
-      alert("Masukkan nomor HP yang valid!");
-      return;
-    }
-    temporaryPhone = hp;
-    document.getElementById('authStep1').style.display = 'none';
-    document.getElementById('authStep2').style.display = 'block';
-  }
-
-  function kembaliKeStep1() {
-    document.getElementById('authStep2').style.display = 'none';
-    document.getElementById('authStep1').style.display = 'block';
-  }
-
-  function verifikasiOTP() {
-    const otp = document.getElementById('inputOTP').value;
-    if (otp === "1234") {
-      currentUser = temporaryPhone;
-      localStorage.setItem('antarin_user', currentUser);
-      cekStatusLogin();
-    } else {
-      alert("Kode OTP salah! Masukkan 1234 untuk simulasi.");
-    }
-  }
-
-  function logoutAkun() {
-    if (confirm("Ingin keluar dari akun?")) {
-      localStorage.removeItem('antarin_user');
-      currentUser = null;
-      cekStatusLogin();
     }
   }
 
@@ -588,7 +603,6 @@
 
   function pilihModePeta(mode) {
     modeAktif = mode;
-    
     document.getElementById('groupAsal').classList.remove('active-focus');
     document.getElementById('groupTujuan').classList.remove('active-focus');
 
@@ -650,10 +664,8 @@
 
   function liveSearchLokasi(query, target) {
     clearTimeout(debounceTimer);
-    
     const boxId = target === 'asal' ? 'autoBoxAsal' : 'autoBoxTujuan';
     const otherBoxId = target === 'asal' ? 'autoBoxTujuan' : 'autoBoxAsal';
-    
     const boxResults = document.getElementById(boxId);
     document.getElementById(otherBoxId).style.display = 'none';
 
@@ -721,19 +733,11 @@
     const btn2 = document.getElementById('btnTier2');
 
     if (tier === 1) {
-      btn1.style.background = '#e8f5e9';
-      btn1.style.color = '#00880c';
-      btn1.style.borderColor = '#00880c';
-      btn2.style.background = 'white';
-      btn2.style.color = '#555';
-      btn2.style.borderColor = '#ddd';
+      btn1.style.background = '#e8f5e9'; btn1.style.color = '#00880c'; btn1.style.borderColor = '#00880c';
+      btn2.style.background = 'white'; btn2.style.color = '#555'; btn2.style.borderColor = '#ddd';
     } else {
-      btn2.style.background = '#e8f5e9';
-      btn2.style.color = '#00880c';
-      btn2.style.borderColor = '#00880c';
-      btn1.style.background = 'white';
-      btn1.style.color = '#555';
-      btn1.style.borderColor = '#ddd';
+      btn2.style.background = '#e8f5e9'; btn2.style.color = '#00880c'; btn2.style.borderColor = '#00880c';
+      btn1.style.background = 'white'; btn1.style.color = '#555'; btn1.style.borderColor = '#ddd';
     }
     hitungKalkulasiTarifOtomatis();
   }
@@ -744,11 +748,9 @@
     const btnQris = document.getElementById('btnPayQris');
 
     if (metode === 'CASH') {
-      btnCash.className = 'pay-opt-btn active';
-      btnQris.className = 'pay-opt-btn';
+      btnCash.className = 'pay-opt-btn active'; btnQris.className = 'pay-opt-btn';
     } else {
-      btnQris.className = 'pay-opt-btn active';
-      btnCash.className = 'pay-opt-btn';
+      btnQris.className = 'pay-opt-btn active'; btnCash.className = 'pay-opt-btn';
     }
   }
 
@@ -765,25 +767,17 @@
     let tarifMinimum = 8500;  
 
     if (jenisLayanan === 'RIDE') {
-      tarifPerKM = 2500;
-      biayabase = 4000;
-      tarifMinimum = 9000;
+      tarifPerKM = 2500; biayabase = 4000; tarifMinimum = 9000;
     } else if (jenisLayanan === 'SEND' || jenisLayanan === 'SHOP') {
       if (tierBarang === 1) {
-        tarifPerKM = 2000;
-        biayabase = 4000;
-        tarifMinimum = 9000;
+        tarifPerKM = 2000; biayabase = 4000; tarifMinimum = 9000;
       } else {
-        tarifPerKM = 3000;
-        biayabase = 6500;
-        tarifMinimum = 13000;
+        tarifPerKM = 3000; biayabase = 6500; tarifMinimum = 13000;
       }
     }
 
     let totalOngkir = biayabase + (jarakFormatted * tarifPerKM);
-    if (totalOngkir < tarifMinimum) {
-      totalOngkir = tarifMinimum;
-    }
+    if (totalOngkir < tarifMinimum) totalOngkir = tarifMinimum;
 
     tarifOngkirGlobal = Math.round(totalOngkir);
     const biayaAplikasi = 2000;
@@ -809,46 +803,24 @@
     const btnPesanAction = document.getElementById('btnPesanAction');
     const tierCard = document.getElementById('tierCard');
     const tierLabelTitle = document.getElementById('tierLabelTitle');
-    const btnTier1 = document.getElementById('btnTier1');
-    const btnTier2 = document.getElementById('btnTier2');
 
     if (jenis === 'SEND' || jenis === 'SHOP') {
       tierCard.style.display = 'block';
       tierBarang = 1;
       pilihTierBarang(1);
-      if (jenis === 'SEND') {
-        tierLabelTitle.innerText = '📦 Ukuran / Berat Paket:';
-        btnTier1.innerText = 'Kecil / Ringan (< 5kg)';
-        btnTier2.innerText = 'Besar / Berat (> 5kg)';
-      } else {
-        tierLabelTitle.innerText = '🛍️ Jumlah / Volume Belanjaan:';
-        btnTier1.innerText = 'Belanja Ringan (< 5 item)';
-        btnTier2.innerText = 'Belanja Banyak / Besar';
-      }
+      tierLabelTitle.innerText = jenis === 'SEND' ? '📦 Ukuran / Berat Paket:' : '🛍️ Jumlah / Volume Belanjaan:';
     } else {
       tierCard.style.display = 'none';
     }
 
     if (jenis === 'FOOD') {
-      pageHeader.className = 'page-header theme-food';
-      pageTitle.innerText = 'AntarinFood (Pesan Makanan)';
-      namaLayananAktif = 'AntarinFood';
-      btnPesanAction.style.background = '#d32f2f';
+      pageHeader.className = 'page-header theme-food'; pageTitle.innerText = 'AntarinFood (Pesan Makanan)'; namaLayananAktif = 'AntarinFood'; btnPesanAction.style.background = '#d32f2f';
     } else if (jenis === 'RIDE') {
-      pageHeader.className = 'page-header theme-ride';
-      pageTitle.innerText = 'AntarinRide (Ojek Motor)';
-      namaLayananAktif = 'AntarinRide';
-      btnPesanAction.style.background = '#00880c';
+      pageHeader.className = 'page-header theme-ride'; pageTitle.innerText = 'AntarinRide (Ojek Motor)'; namaLayananAktif = 'AntarinRide'; btnPesanAction.style.background = '#00880c';
     } else if (jenis === 'SHOP') {
-      pageHeader.className = 'page-header theme-shop';
-      pageTitle.innerText = 'AntarinShop (Belanja)';
-      namaLayananAktif = 'AntarinShop';
-      btnPesanAction.style.background = '#7b1fa2';
+      pageHeader.className = 'page-header theme-shop'; pageTitle.innerText = 'AntarinShop (Belanja)'; namaLayananAktif = 'AntarinShop'; btnPesanAction.style.background = '#7b1fa2';
     } else if (jenis === 'SEND') {
-      pageHeader.className = 'page-header theme-send';
-      pageTitle.innerText = 'AntarinSend (Kirim Paket)';
-      namaLayananAktif = 'AntarinSend';
-      btnPesanAction.style.background = '#1976d2';
+      pageHeader.className = 'page-header theme-send'; pageTitle.innerText = 'AntarinSend (Kirim Paket)'; namaLayananAktif = 'AntarinSend'; btnPesanAction.style.background = '#1976d2';
     }
 
     setTimeout(() => {
@@ -869,25 +841,18 @@
           alert("Pembayaran QRIS Midtrans Berhasil!");
           kirimDataKeFirebaseDanLanjut();
         },
-        onPending: function(result) {
-          alert("Menunggu pembayaran QRIS selesai...");
-        },
-        onError: function(result) {
-          alert("Pembayaran Midtrans Gagal!");
-        },
-        onClose: function() {
-          alert("Anda menutup halaman pembayaran sebelum selesai.");
-        }
+        onPending: function() { alert("Menunggu pembayaran QRIS..."); },
+        onError: function() { alert("Pembayaran Midtrans Gagal!"); },
+        onClose: function() { alert("Pembayaran ditutup."); }
       });
       return;
     }
-
     kirimDataKeFirebaseDanLanjut();
   }
 
   function kirimDataKeFirebaseDanLanjut() {
     if (!window.firebaseDb) {
-      alert("Koneksi database Firebase sedang dimuat, coba beberapa saat lagi.");
+      alert("Koneksi database sedang dimuat.");
       return;
     }
 
@@ -896,7 +861,6 @@
     const asalVal = document.getElementById('lokasiAsal').value;
     const tujuanVal = document.getElementById('lokasiTujuan').value;
 
-    const newOrderRef = window.firebaseRef(window.firebaseDb, 'orders/');
     window.firebaseSet(window.firebaseRef(window.firebaseDb, 'orders/' + orderIdNum), {
       id: orderIdNum,
       customer: currentUser || "Pelanggan",
@@ -932,23 +896,14 @@
     });
 
     trackingMap.on('load', function() {
-      const elAsal = document.createElement('div');
-      elAsal.innerHTML = '💜';
-      elAsal.style.fontSize = '28px';
+      const elAsal = document.createElement('div'); elAsal.innerHTML = '💜'; elAsal.style.fontSize = '28px';
       new maplibregl.Marker({ element: elAsal }).setLngLat(coordsAsal).addTo(trackingMap);
 
-      const elTujuan = document.createElement('div');
-      elTujuan.innerHTML = '🟢';
-      elTujuan.style.fontSize = '28px';
+      const elTujuan = document.createElement('div'); elTujuan.innerHTML = '🟢'; elTujuan.style.fontSize = '28px';
       new maplibregl.Marker({ element: elTujuan }).setLngLat(coordsTujuan).addTo(trackingMap);
 
-      const driverEl = document.createElement('div');
-      driverEl.innerHTML = '🛵';
-      driverEl.style.fontSize = '30px';
-
-      driverMarker = new maplibregl.Marker({ element: driverEl })
-        .setLngLat(coordsAsal)
-        .addTo(trackingMap);
+      const driverEl = document.createElement('div'); driverEl.innerHTML = '🛵'; driverEl.style.fontSize = '30px';
+      driverMarker = new maplibregl.Marker({ element: driverEl }).setLngLat(coordsAsal).addTo(trackingMap);
 
       mulaiSimulasiDriverSmooth();
     });
@@ -964,22 +919,19 @@
         document.getElementById('trackingStatusText').innerText = "✅ Driver Joko sudah tiba di lokasi!";
         return;
       }
-
       const currentLng = coordsAsal[0] + (coordsTujuan[0] - coordsAsal[0]) * progress;
       const currentLat = coordsAsal[1] + (coordsTujuan[1] - coordsAsal[1]) * progress;
 
       driverMarker.setLngLat([currentLng, currentLat]);
       trackingMap.easeTo({ center: [currentLng, currentLat], duration: 0, animate: false });
-
       animFrameId = requestAnimationFrame(animate);
     }
-
     if (animFrameId) cancelAnimationFrame(animFrameId);
     animate();
   }
 
   function selesaikanOrderan() {
-    alert("Pesanan Selesai! Terima kasih telah menggunakan Antarin Food.");
+    alert("Pesanan Selesai! Terima kasih telah menggunakan Antarin.");
     if (animFrameId) cancelAnimationFrame(animFrameId);
     document.getElementById('trackingPage').style.display = 'none';
     pindahTab('riwayat');
