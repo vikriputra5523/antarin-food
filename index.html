@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Antarin - SuperApp Konsumen</title>
+  <title>Antarin - SuperApp Konsumen & Driver</title>
 
   <!-- CSS MapLibre GL -->
   <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
@@ -140,6 +140,10 @@
     .action-row { display: flex; gap: 10px; }
     .btn-action-chat { flex: 1; background: #00880c; color: white; border: none; padding: 12px; border-radius: 20px; font-weight: bold; font-size: 12px; cursor: pointer; }
 
+    /* DRIVER DASHBOARD VIEW (MODE DRIVER NYATA) */
+    .driver-dashboard-view { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #f8f9fa; z-index: 120; display: none; flex-direction: column; overflow-y: auto; }
+    .order-item-driver { background: white; border-radius: 14px; border: 1px solid #e5e7eb; padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 8px; }
+
     /* MODAL MENCARI DRIVER / FORM TAMBAH ALAMAT */
     .searching-modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 150; display: none; align-items: center; justify-content: center; }
     .searching-card { background: white; padding: 24px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
@@ -177,7 +181,7 @@
     <div class="searching-card">
       <div class="spinner"></div>
       <h3 style="font-size: 15px; font-weight: bold; color: #111; margin-bottom: 6px;">Mencari Driver Terdekat...</h3>
-      <p style="font-size: 12px; color: #666; margin-bottom: 16px;">Buka aplikasi Driver Anda dan klik "Terima Order" secara real-time.</p>
+      <p style="font-size: 12px; color: #666; margin-bottom: 16px;">Buka Mode Driver di menu Akun untuk menerima pesanan ini secara nyata!</p>
       <button onclick="batalkanPesananOlehCustomer()" style="background: #ffebee; border: 1px solid #d32f2f; color: #d32f2f; padding: 10px 16px; border-radius: 12px; font-size: 12px; font-weight: bold; width: 100%; cursor: pointer;">Batalkan Pesanan</button>
     </div>
   </div>
@@ -375,22 +379,19 @@
     <div class="history-container" id="historyListContainer" style="padding:16px; display:flex; flex-direction:column; gap:10px;"></div>
   </div>
 
-  <!-- VIEW 3: CHAT & PANGGILAN DRIVER -->
+  <!-- VIEW 3: CHAT & PANGGILAN NYATA KE DRIVER -->
   <div class="app-view" id="viewChat" style="padding: 16px; display: flex; flex-direction: column; gap: 12px; background: #f8f9fa;">
-    <div style="background: white; border-radius: 12px; padding: 14px; border: 1px solid #eee; display: flex; flex-direction: column; gap: 8px;">
-      <div style="font-size: 13px; font-weight: bold; color: #111;">📞 Simulasi Panggilan Suara dari Driver</div>
-      <div style="font-size: 12px; color: #666;" id="callStatusText">Driver sedang menelepon Anda... (Percobaan ke-<span id="callCountNum">0</span> dari 3)</div>
-      <div style="display: flex; gap: 8px;" id="callActionBox">
-        <button onclick="terimaPanggilanDriver()" style="flex:1; background: #e8f5e9; color: #00880c; border: 1px solid #00880c; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer;">Terima</button>
-        <button onclick="tolakPanggilanDriver()" style="flex:1; background: #ffebee; color: #d32f2f; border: 1px solid #d32f2f; padding: 10px; border-radius: 8px; font-weight: bold; font-size: 12px; cursor: pointer;">Tolak / Abaikan</button>
-      </div>
-      <div id="revealedPhoneBox" style="display: none; background: #e3f2fd; border: 1px solid #1976d2; padding: 10px; border-radius: 8px; font-size: 12px; color: #1976d2; font-weight: bold; text-align: center;">
-        🛡️ Panggilan diabaikan 3x. No. HP Anda yang terdaftar: <span id="displayRegisteredPhone">-</span> telah otomatis dibagikan ke driver.
+    <div style="background: white; border-radius: 12px; padding: 16px; border: 1px solid #eee; display: flex; flex-direction: column; gap: 10px;">
+      <div style="font-size: 14px; font-weight: bold; color: #111;">📞 Hubungi Driver yang Bertugas</div>
+      <div style="font-size: 12px; color: #666;" id="chatDriverStatusText">Driver sedang dalam perjalanan menuju lokasi Anda. Gunakan tombol di bawah untuk menelepon atau mengirim pesan WhatsApp secara langsung.</div>
+      <div style="display: flex; gap: 10px; margin-top: 4px;">
+        <a id="btnRealCall" href="tel:08123456789" style="flex:1; background: #e8f5e9; color: #00880c; border: 1px solid #00880c; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 12px; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px;">📞 Telepon Driver</a>
+        <a id="btnRealWA" href="https://wa.me/628123456789" target="_blank" style="flex:1; background: #e3f2fd; color: #1976d2; border: 1px solid #1976d2; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 12px; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px;">💬 Chat WhatsApp</a>
       </div>
     </div>
     <div style="flex-grow: 1; background: white; border-radius: 12px; padding: 14px; border: 1px solid #eee; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; color: #666;">
-      <h3>💬 Pesan & Bantuan</h3>
-      <p style="font-size: 13px; margin-top: 8px;">Belum ada percakapan teks aktif dengan mitra driver.</p>
+      <h3>💬 Bantuan Pesanan</h3>
+      <p style="font-size: 13px; margin-top: 8px;">Gunakan WhatsApp atau Telepon di atas untuk komunikasi langsung dengan mitra pengemudi.</p>
     </div>
   </div>
 
@@ -415,6 +416,14 @@
           <div style="font-size: 18px; font-weight: bold; margin-top: 2px;">🪙 1.450 Coins</div>
         </div>
         <button onclick="alert('Tukar coins dengan diskon perjalanan segera hadir!')" style="background: white; color: #00880c; border: none; padding: 8px 12px; border-radius: 12px; font-size: 11px; font-weight: bold; cursor: pointer;">Tukar ›</button>
+      </div>
+
+      <!-- MENU KHUSUS MODE DRIVER (MENJADIKAN NYATA TANPA SIMULASI) -->
+      <div class="akun-menu-group" style="border: 2px solid #00880c;">
+        <div class="akun-menu-item" onclick="bukaModeDriver()" style="background: #e8f5e9;">
+          <div class="akun-menu-left"><span class="akun-menu-icon">🛵</span> <b>Buka Mode Driver (Terima Order Real)</b></div>
+          <span style="color:#00880c; font-weight: bold;">Mulai ›</span>
+        </div>
       </div>
 
       <div class="akun-menu-group">
@@ -447,15 +456,24 @@
     </div>
   </div>
 
+  <!-- VIEW 5: MODE DRIVER (DASHBOARD DRIVER NYATA) -->
+  <div class="driver-dashboard-view" id="driverDashboardView">
+    <div class="page-header" style="background: #00880c; position: sticky; top:0; z-index:130;">
+      <button class="btn-back" onclick="tutupModeDriver()">←</button>
+      <span class="page-title">Dashboard Mitra Driver (Real-time)</span>
+    </div>
+    <div style="padding: 16px; display: flex; flex-direction: column; gap: 12px;" id="driverOrderListContainer">
+      <div style="text-align:center; color:#666; font-size:13px; margin-top:30px;">Mendengarkan pesanan masuk dari server Firebase...</div>
+    </div>
+  </div>
+
   <!-- SUB-HALAMAN AKUN: ALAMAT TERSIMPAN -->
   <div class="sub-akun-page" id="subPageAlamat">
     <div class="page-header" style="background:#00880c; color:white;">
       <button class="btn-back" onclick="kembaliKeSebelumnya()">←</button>
       <span class="page-title">Alamat Tersimpan (Maks. 5)</span>
     </div>
-    <div style="padding: 16px; display: flex; flex-direction: column; gap: 12px;" id="alamatListContainer">
-      <!-- Dynamic render -->
-    </div>
+    <div style="padding: 16px; display: flex; flex-direction: column; gap: 12px;" id="alamatListContainer"></div>
     <div style="padding: 0 16px 16px 16px;">
       <button id="btnAddAlamat" onclick="bukaFormTambahAlamat()" style="width: 100%; background: #e8f5e9; color: #00880c; border: 1px dashed #00880c; padding: 12px; border-radius: 12px; font-weight: bold; font-size: 12px; cursor: pointer;">+ Tambah Alamat Baru</button>
     </div>
@@ -472,10 +490,6 @@
         <span style="font-size: 13px; font-weight: bold; color: #00880c;">🇮🇩 Bahasa Indonesia (Aktif)</span>
         <span style="color: #00880c; font-weight: bold;">✓</span>
       </div>
-      <div onclick="alert('Bahasa Inggris akan segera tersedia.')" style="background: white; border: 1px solid #eee; border-radius: 12px; padding: 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
-        <span style="font-size: 13px; font-weight: bold; color: #333;">🇬🇧 English (Coming Soon)</span>
-        <span style="color: #aaa;">›</span>
-      </div>
     </div>
   </div>
 
@@ -490,13 +504,6 @@
         <div style="font-size: 13px; font-weight: bold; color: #111;">Google Firebase Authentication</div>
         <div style="font-size: 12px; color: #666;" id="infoKeamananEmail">Akun terhubung aman melalui Google Sign-In.</div>
       </div>
-      <div style="background: white; border: 1px solid #eee; border-radius: 12px; padding: 14px; display: flex; justify-content: space-between; align-items: center;">
-        <div>
-          <div style="font-size: 13px; font-weight: bold; color: #111;">Verifikasi PIN & Perangkat</div>
-          <div style="font-size: 11px; color: #666;">Perangkat ini terdaftar resmi.</div>
-        </div>
-        <span style="color: #00880c; font-weight: bold; font-size: 12px;">Aktif</span>
-      </div>
     </div>
   </div>
 
@@ -509,15 +516,7 @@
     <div style="padding: 16px; display: flex; flex-direction: column; gap: 12px;">
       <div style="background: white; border: 1px solid #eee; border-radius: 12px; padding: 14px; cursor: pointer;" onclick="window.open('https://wa.me/6281234567890', '_blank')">
         <div style="font-size: 13px; font-weight: bold; color: #00880c; margin-bottom: 4px;">💬 Chat WhatsApp CS Antarin 24 Jam</div>
-        <div style="font-size: 12px; color: #666;">Hubungi tim dukungan kami secara langsung untuk kendala pesanan atau pembayaran.</div>
-      </div>
-      <div style="background: white; border: 1px solid #eee; border-radius: 12px; padding: 14px;">
-        <div style="font-size: 13px; font-weight: bold; color: #111; margin-bottom: 4px;">❓ Pertanyaan Umum (FAQ)</div>
-        <div style="font-size: 12px; color: #666; line-height: 1.4;">
-          • Bagaimana cara memesan makanan?<br>
-          • Mengapa pembayaran QRIS tertunda?<br>
-          • Cara menghubungi driver yang bertugas.
-        </div>
+        <div style="font-size: 12px; color: #666;">Hubungi tim dukungan kami secara langsung untuk kendala pesanan.</div>
       </div>
     </div>
   </div>
@@ -530,8 +529,7 @@
     </div>
     <div style="padding: 16px; font-size: 12px; color: #555; line-height: 1.6; display: flex; flex-direction: column; gap: 10px;">
       <p><b>Ketentuan Layanan Antarin SuperApp 2026</b></p>
-      <p>Dengan menggunakan aplikasi Antarin, Anda menyetujui seluruh syarat dan ketentuan yang berlaku terkait layanan transportasi, pengiriman barang, belanja, dan kuliner.</p>
-      <p>Seluruh transaksi pembayaran menggunakan metode QRIS (Cash dinonaktifkan sementara untuk keamanan transaksi).</p>
+      <p>Dengan menggunakan aplikasi Antarin, Anda menyetujui seluruh syarat dan ketentuan yang berlaku.</p>
     </div>
   </div>
 
@@ -558,7 +556,7 @@
       </div>
       <div class="map-hint" id="mapHintText" style="color:#00880c;">📍 Geser peta untuk menentukan titik lokasi</div>
 
-      <!-- FORM KHUSUS ANTARIN SEND (GOSEND STYLE) -->
+      <!-- FORM KHUSUS ANTARIN SEND -->
       <div class="route-card" id="sendFormContainer" style="display:none;">
         <div style="font-size: 13px; font-weight: bold; color: #1976d2; margin-bottom: 4px;">📦 Detail Penerima & Paket (Maks. 30 kg)</div>
         <div style="display:flex; flex-direction:column; gap:8px;">
@@ -570,17 +568,17 @@
             <option value="Makanan / Minuman">🍜 Makanan / Minuman</option>
             <option value="Pakaian / Kain">👕 Pakaian / Tekstil</option>
           </select>
-          <input type="text" id="sendCatatanBarang" placeholder="Catatan untuk Kurir (Opsional, cth: Taruh di teras)" style="padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 12px; outline:none; background:white;">
+          <input type="text" id="sendCatatanBarang" placeholder="Catatan untuk Kurir (Opsional)" style="padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 12px; outline:none; background:white;">
         </div>
       </div>
 
-      <!-- FORM KHUSUS ANTARIN SHOP (GOSHOP STYLE) -->
+      <!-- FORM KHUSUS ANTARIN SHOP -->
       <div class="route-card" id="shopFormContainer" style="display:none;">
         <div style="font-size: 13px; font-weight: bold; color: #7b1fa2; margin-bottom: 4px;">🛍️ Detail Tempat Belanja (Maks. 30 kg)</div>
         <div style="display:flex; flex-direction:column; gap:8px;">
-          <input type="text" id="shopNamaToko" placeholder="Nama Toko / Tempat Belanja (Cth: Indomaret A. Yani)" style="padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 12px; outline:none; background:white;">
-          <textarea id="shopDaftarBelanja" rows="3" placeholder="Tulis daftar belanjaan Anda secara detail di sini (Cth: 1x Susu Ultra 1L, 2x Roti Tawar)" style="padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 12px; outline:none; resize:none; background:white;"></textarea>
-          <input type="number" id="shopEstimasiModal" placeholder="Perkiraan Total Biaya Belanja (Rp) untuk Modal Driver" style="padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 12px; outline:none; background:white;">
+          <input type="text" id="shopNamaToko" placeholder="Nama Toko / Tempat Belanja" style="padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 12px; outline:none; background:white;">
+          <textarea id="shopDaftarBelanja" rows="3" placeholder="Tulis daftar belanjaan Anda secara detail" style="padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 12px; outline:none; resize:none; background:white;"></textarea>
+          <input type="number" id="shopEstimasiModal" placeholder="Perkiraan Total Biaya Belanja (Rp)" style="padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-size: 12px; outline:none; background:white;">
         </div>
       </div>
 
@@ -588,9 +586,8 @@
         <div style="font-size:12px; font-weight:bold; margin-bottom:6px; color:#444;" id="tierLabelTitle">📦 Pilih Ukuran / Berat Barang:</div>
         <div style="display:flex; gap:8px;">
           <button type="button" id="btnTier1" onclick="pilihTierBarang(1)" style="flex:1; padding:8px; border:1px solid #00880c; background:#e8f5e9; color:#00880c; border-radius:8px; font-weight:bold; font-size:11px; cursor:pointer;">Kecil / Ringan (< 5kg)</button>
-          <button type="button" id="btnTier2" onclick="pilihTierBarang(2)" style="flex:1; padding:8px; border:1px solid #ddd; background:white; color:#555; border-radius:8px; font-weight:bold; font-size:11px; cursor:pointer;">Besar / Berat (5kg - 30kg Maks)</button>
+          <button type="button" id="btnTier2" onclick="pilihTierBarang(2)" style="flex:1; padding:8px; border:1px solid #ddd; background:white; color:#555; border-radius:8px; font-weight:bold; font-size:11px; cursor:pointer;">Besar / Berat (5kg - 30kg)</button>
         </div>
-        <div style="font-size: 10px; color: #666; margin-top: 6px;">*Batas maksimal berat total barang untuk layanan motor adalah 30 kg.</div>
       </div>
 
       <div class="route-card">
@@ -614,9 +611,9 @@
         </div>
       </div>
 
-      <!-- METODE PEMBAYARAN (HANYA QRIS AKTIF) -->
+      <!-- METODE PEMBAYARAN (QRIS MIDTRANS) -->
       <div class="route-card" style="padding: 12px 14px;">
-        <div style="font-size: 12px; font-weight: bold; margin-bottom: 6px; color: #444;">💳 Metode Pembayaran (Cash Dinonaktifkan Sementara):</div>
+        <div style="font-size: 12px; font-weight: bold; margin-bottom: 6px; color: #444;">💳 Metode Pembayaran (Cash Dinonaktifkan):</div>
         <div class="payment-options-dropdown">
           <button type="button" class="pay-opt-btn active" style="width: 100%;">⚡ QRIS (Midtrans - Aktif)</button>
         </div>
@@ -669,7 +666,7 @@
 <!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-  import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+  import { getDatabase, ref, set, onValue, remove, update } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
   const firebaseConfig = {
@@ -692,6 +689,7 @@
   window.firebaseSet = set;
   window.firebaseOnValue = onValue;
   window.firebaseRemove = remove;
+  window.firebaseUpdate = update;
 
   let googleUserTemp = null;
 
@@ -703,12 +701,10 @@
         let savedProfileStr = localStorage.getItem('antarin_profile_' + googleUserTemp.email);
         
         if (savedProfileStr) {
-          // Pengguna lama yang sudah terdaftar
           let profile = JSON.parse(savedProfileStr);
           localStorage.setItem('antarin_user', profile.nama + " - " + profile.nohp);
           location.reload();
         } else {
-          // Pengguna baru -> arahkan ke area pendaftaran profil
           document.getElementById('authScreen').style.display = 'none';
           document.getElementById('registerScreen').style.display = 'flex';
           document.getElementById('regEmail').value = googleUserTemp.email;
@@ -735,18 +731,12 @@
       return;
     }
 
-    let profileData = {
-      nama: nama,
-      alamat: alamat,
-      nohp: nohp,
-      email: email,
-      foto: ''
-    };
+    let profileData = { nama, alamat, nohp, email, foto: '' };
 
     if (fotoInput) {
       const reader = new FileReader();
       reader.onload = function(e) {
-        profileData.foto = e.target.result; // Simpan foto dalam bentuk Base64
+        profileData.foto = e.target.result;
         simpanKeLocalDanMasuk(profileData);
       };
       reader.readAsDataURL(fotoInput);
@@ -759,7 +749,6 @@
     localStorage.setItem('antarin_profile_' + profileData.email, JSON.stringify(profileData));
     localStorage.setItem('antarin_user', profileData.nama + " - " + profileData.nohp);
     
-    // Simpan otomatis alamat pertama ke daftar alamat tersimpan
     let defaultAddresses = [
       { id: 1, namaPelanggan: profileData.nama + ' (Utama)', alamat: profileData.alamat }
     ];
@@ -786,7 +775,7 @@
   let modeAktif = 'asal'; 
   let jenisLayanan = 'RIDE';
   let tierBarang = 1;
-  let metodePembayaran = 'QRIS'; // Hanya QRIS yang aktif
+  let metodePembayaran = 'QRIS';
   
   let cartMenuFood = {};
   let terpilihRestoNama = "";
@@ -800,37 +789,14 @@
   let currentUser = localStorage.getItem('antarin_user');
   let riwayatTransaksi = JSON.parse(localStorage.getItem('antarin_riwayat') || '[]');
 
-  let callRejectCount = 0;
-
   window.onload = function() {
     cekStatusLogin();
     renderRiwayatTransaksi();
     inisialisasiTombolBackHP();
+    inisialisasiListenerDriverDashboard();
   };
 
-  function tolakPanggilanDriver() {
-    callRejectCount++;
-    if (callRejectCount >= 3) {
-      document.getElementById('callCountNum').innerText = callRejectCount;
-      document.getElementById('callStatusText').innerText = "Panggilan diabaikan sebanyak 3 kali.";
-      document.getElementById('callActionBox').style.display = 'none';
-      
-      let phoneNum = currentUser ? currentUser.split(' - ')[1] : "08123456789";
-      document.getElementById('displayRegisteredPhone').innerText = phoneNum;
-      document.getElementById('revealedPhoneBox').style.display = 'block';
-    } else {
-      document.getElementById('callCountNum').innerText = callRejectCount;
-      alert(`Panggilan ditolak/diabaikan (Percobaan ke-${callRejectCount} dari 3).`);
-    }
-  }
-
-  function terimaPanggilanDriver() {
-    alert("Panggilan diterima! Terhubung dengan suara driver.");
-    callRejectCount = 0;
-    document.getElementById('callCountNum').innerText = callRejectCount;
-  }
-
-  // --- MANAJEMEN ALAMAT TERSIMPAN (MAKSIMAL 5 DENGAN NAMA PELANGGAN) ---
+  // --- MANAJEMEN ALAMAT TERSIMPAN ---
   function getUserAddressKey() {
     return currentUser ? 'antarin_addresses_' + currentUser.replace(/[^a-zA-Z0-9]/g, '_') : 'antarin_addresses_default';
   }
@@ -880,7 +846,7 @@
       btnAdd.style.background = '#f5f5f5';
       btnAdd.style.color = '#aaa';
       btnAdd.style.borderColor = '#ddd';
-      btnAdd.innerText = 'Maksimal 5 Alamat Tercapai (Hapus salah satu untuk menambah)';
+      btnAdd.innerText = 'Maksimal 5 Alamat Tercapai';
     } else {
       btnAdd.style.background = '#e8f5e9';
       btnAdd.style.color = '#00880c';
@@ -891,10 +857,7 @@
 
   function bukaFormTambahAlamat() {
     const list = getSavedAddresses();
-    if (list.length >= 5) {
-      alert("Maksimal setiap akun customer hanya dapat memiliki 5 alamat tersimpan. Silakan hapus salah satu alamat terlebih dahulu untuk menambah alamat baru.");
-      return;
-    }
+    if (list.length >= 5) { alert("Maksimal 5 alamat tersimpan."); return; }
     document.getElementById('modalAlamatTitle').innerText = "Tambah Alamat Baru";
     document.getElementById('editAlamatId').value = "";
     document.getElementById('inputNamaPelanggan').value = "";
@@ -913,39 +876,27 @@
     document.getElementById('modalFormAlamat').style.display = 'flex';
   }
 
-  function tutupFormAlamat() {
-    document.getElementById('modalFormAlamat').style.display = 'none';
-  }
+  function tutupFormAlamat() { document.getElementById('modalFormAlamat').style.display = 'none'; }
 
   function simpanAlamatBaru() {
     const namaPelanggan = document.getElementById('inputNamaPelanggan').value.trim();
     const alamat = document.getElementById('inputDetailAlamat').value.trim();
     const editId = document.getElementById('editAlamatId').value;
-
-    if (!namaPelanggan || !alamat) {
-      alert("Nama pelanggan dan detail alamat wajib diisi.");
-      return;
-    }
-
+    if (!namaPelanggan || !alamat) { alert("Nama dan alamat wajib diisi."); return; }
     let list = getSavedAddresses();
-
     if (editId) {
       list = list.map(item => item.id == editId ? { ...item, namaPelanggan, alamat } : item);
     } else {
-      if (list.length >= 5) {
-        alert("Batas maksimal 5 alamat tercapai.");
-        return;
-      }
+      if (list.length >= 5) { alert("Batas maksimal 5 alamat."); return; }
       list.push({ id: Date.now(), namaPelanggan, alamat });
     }
-
     saveAddressesList(list);
     tutupFormAlamat();
     renderAlamatTersimpanPage();
   }
 
   function hapusAlamat(id) {
-    if (confirm("Apakah Anda yakin ingin menghapus alamat ini?")) {
+    if (confirm("Hapus alamat ini?")) {
       let list = getSavedAddresses();
       list = list.filter(item => item.id !== id);
       saveAddressesList(list);
@@ -953,8 +904,81 @@
     }
   }
 
+  // --- MODE DRIVER NYATA (TERINTEGRASI DI FIREBASE) ---
+  function bukaModeDriver() {
+    document.getElementById('driverDashboardView').style.display = 'flex';
+  }
+  function tutupModeDriver() {
+    document.getElementById('driverDashboardView').style.display = 'none';
+  }
+
+  function inisialisasiListenerDriverDashboard() {
+    if (!window.firebaseDb) return;
+    const ordersRef = window.firebaseRef(window.firebaseDb, 'orders');
+    window.firebaseOnValue(ordersRef, (snapshot) => {
+      const data = snapshot.val();
+      const container = document.getElementById('driverOrderListContainer');
+      if (!data) {
+        container.innerHTML = `<div style="text-align:center; color:#666; font-size:13px; margin-top:30px;">Belum ada pesanan baru dari pelanggan.</div>`;
+        return;
+      }
+
+      let html = '';
+      for (let orderId in data) {
+        let ord = data[orderId];
+        if (ord.status === 'SEARCHING') {
+          html += `
+            <div class="order-item-driver">
+              <div style="font-size:14px; font-weight:bold; color:#00880c;">🔔 Order #${ord.id} - ${ord.layanan}</div>
+              <div style="font-size:12px; color:#333;"><b>Pemesan:</b> ${ord.customer} (${ord.customerPhone})</div>
+              <div style="font-size:11px; color:#666;"><b>Jemput:</b> ${ord.pickup}</div>
+              <div style="font-size:11px; color:#666;"><b>Tujuan:</b> ${ord.destination}</div>
+              <div style="font-size:13px; font-weight:bold; color:#111; margin-top:4px;">Total: Rp ${ord.total.toLocaleString('id-ID')}</div>
+              <button onclick="terimaOrderSebagaiDriver('${ord.id}')" style="background:#00880c; color:white; border:none; padding:10px; border-radius:10px; font-weight:bold; font-size:12px; margin-top:6px; cursor:pointer;">Terima Order Ini</button>
+            </div>
+          `;
+        }
+      }
+      container.innerHTML = html || `<div style="text-align:center; color:#666; font-size:13px; margin-top:30px;">Tidak ada pesanan yang sedang mencari driver.</div>`;
+    });
+  }
+
+  window.terimaOrderSebagaiDriver = function(orderId) {
+    const driverName = currentUser ? currentUser.split(' - ')[0] : "Budi Driver";
+    const driverPhone = currentUser ? currentUser.split(' - ')[1] : "081298765432";
+    const driverVehicle = "Honda Beat • F 1234 AB";
+
+    window.firebaseUpdate(window.firebaseRef(window.firebaseDb, 'orders/' + orderId), {
+      status: 'ACCEPTED',
+      driverName: driverName,
+      driverPhone: driverPhone,
+      driverVehicle: driverVehicle
+    }).then(() => {
+      alert("Order berhasil diterima! Anda bertindak sebagai Driver.");
+      tutupModeDriver();
+      mulaiBroadcastGPSDriver(orderId);
+    });
+  };
+
+  function mulaiBroadcastGPSDriver(orderId) {
+    alert("Broadcast GPS Driver Aktif. Lokasi Anda dikirim ke server secara nyata.");
+    // Kirim update posisi secara real-time (bisa menggunakan real geolocation watchPosition atau interval bergerak)
+    if (navigator.geolocation) {
+      navigator.geolocation.watchPosition((position) => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        window.firebaseUpdate(window.firebaseRef(window.firebaseDb, 'orders/' + orderId), {
+          driverCoords: [lon, lat]
+        });
+      }, (err) => {
+        // Fallback jika GPS tidak aktif
+        console.log("GPS perangkat tidak aktif, menggunakan koordinat simulasi rute.");
+      }, { enableHighAccuracy: true });
+    }
+  }
+
   function tampilkanView(viewId) {
-    document.querySelectorAll('.app-view, .food-home-page, .restaurant-detail-page, .service-page, .tracking-page, .sub-akun-page').forEach(v => {
+    document.querySelectorAll('.app-view, .food-home-page, .restaurant-detail-page, .service-page, .tracking-page, .sub-akun-page, .driver-dashboard-view').forEach(v => {
       v.style.display = 'none';
       v.classList.remove('active');
     });
@@ -984,9 +1008,7 @@
   }
 
   function navigasiKe(viewId) {
-    if (viewStack[viewStack.length - 1] !== viewId) {
-      viewStack.push(viewId);
-    }
+    if (viewStack[viewStack.length - 1] !== viewId) viewStack.push(viewId);
     tampilkanView(viewId);
   }
 
@@ -1002,33 +1024,22 @@
     else if (jenis === 'bantuan') subId = 'subPageBantuan';
     else if (jenis === 'ketentuan') subId = 'subPageKetentuan';
 
-    if (jenis === 'alamat') {
-      renderAlamatTersimpanProfile();
-    }
-
+    if (jenis === 'alamat') renderAlamatTersimpanPage();
     navigasiKe(subId);
-  }
-
-  function renderAlamatTersimpanProfile() {
-    renderAlamatTersimpanPage();
   }
 
   function kembaliKeSebelumnya() {
     const searchModal = document.getElementById('searchingModal');
     const modalAlamat = document.getElementById('modalFormAlamat');
-    if (modalAlamat.style.display === 'flex') {
-      tutupFormAlamat();
-      return;
-    }
-    if (searchModal.style.display === 'flex') {
-      batalkanPesananOlehCustomer();
-      return;
-    }
+    const driverDash = document.getElementById('driverDashboardView');
+
+    if (driverDash.style.display === 'flex') { tutupModeDriver(); return; }
+    if (modalAlamat.style.display === 'flex') { tutupFormAlamat(); return; }
+    if (searchModal.style.display === 'flex') { batalkanPesananOlehCustomer(); return; }
 
     if (viewStack.length > 1) {
       viewStack.pop();
-      const halamanSebelumnya = viewStack[viewStack.length - 1];
-      tampilkanView(halamanSebelumnya);
+      tampilkanView(viewStack[viewStack.length - 1]);
     } else {
       tampilkanView('viewCustomerBeranda');
     }
@@ -1036,7 +1047,7 @@
 
   function inisialisasiTombolBackHP() {
     window.history.pushState({page: 'home'}, '', '');
-    window.addEventListener('popstate', function(event) {
+    window.addEventListener('popstate', function() {
       kembaliKeSebelumnya();
       window.history.pushState({page: 'home'}, '', '');
     });
@@ -1047,10 +1058,6 @@
       document.getElementById('authScreen').style.display = 'flex';
     } else {
       document.getElementById('authScreen').style.display = 'none';
-      
-      // Ambil data profil lengkap dari localStorage jika ada
-      let userEmailKey = '';
-      // Cari profil berdasar key localStorage
       for (let i = 0; i < localStorage.length; i++) {
         let key = localStorage.key(i);
         if (key.startsWith('antarin_profile_')) {
@@ -1088,26 +1095,19 @@
     terpilihRestoNama = namaResto;
     restoAlamatAktif = alamatResto;
     restoCoordsAktif = [lon, lat];
-
     document.getElementById('restoDetailTitle').innerText = namaResto;
     document.getElementById('restoBannerIcon').innerText = namaResto.includes('Nasi') ? '🍳' : '🍗';
-    
     cartMenuFood = {};
     updateCartBarUI();
     resetSemuaQuantityUI();
-
     navigasiKe('restaurantDetailPage');
   }
   function tutupDetailResto() { kembaliKeSebelumnya(); }
 
   function ubahQuantityMenu(index, namaMenu, hargaMenu, delta) {
-    if (!cartMenuFood[index]) {
-      cartMenuFood[index] = { nama: namaMenu, harga: hargaMenu, qty: 0 };
-    }
-    
+    if (!cartMenuFood[index]) cartMenuFood[index] = { nama: namaMenu, harga: hargaMenu, qty: 0 };
     cartMenuFood[index].qty += delta;
     if (cartMenuFood[index].qty < 0) cartMenuFood[index].qty = 0;
-
     const container = document.getElementById(`container-item-${index}`);
     if (cartMenuFood[index].qty === 0) {
       container.innerHTML = `<button class="btn-tambah-awal" onclick="ubahQuantityMenu(${index}, '${namaMenu}', ${hargaMenu}, 1)">Tambah</button>`;
@@ -1128,20 +1128,16 @@
       const nama = i === 0 ? 'Paket Ayam Bakar Madu Spesial' : (i === 1 ? 'Es Teh Manis Jumbo' : 'Sup Ayam Kampung Hangat');
       const harga = i === 0 ? 28500 : (i === 1 ? 5000 : 25000);
       const container = document.getElementById(`container-item-${i}`);
-      if (container) {
-        container.innerHTML = `<button class="btn-tambah-awal" onclick="ubahQuantityMenu(${i}, '${nama}', ${harga}, 1)">Tambah</button>`;
-      }
+      if (container) container.innerHTML = `<button class="btn-tambah-awal" onclick="ubahQuantityMenu(${i}, '${nama}', ${harga}, 1)">Tambah</button>`;
     }
   }
 
   function updateCartBarUI() {
-    let totalItems = 0;
-    let totalPrice = 0;
+    let totalItems = 0, totalPrice = 0;
     for (let key in cartMenuFood) {
       totalItems += cartMenuFood[key].qty;
       totalPrice += cartMenuFood[key].qty * cartMenuFood[key].harga;
     }
-
     const bar = document.getElementById('restoCheckoutBar');
     if (totalItems > 0) {
       bar.style.display = 'flex';
@@ -1156,28 +1152,21 @@
   let terpilihMenuHarga = 0;
 
   function lanjutKeCheckoutFood() {
-    let ringkasanMenu = [];
-    let totalHargaMenu = 0;
-
+    let ringkasanMenu = [], totalHargaMenu = 0;
     for (let key in cartMenuFood) {
       if (cartMenuFood[key].qty > 0) {
         ringkasanMenu.push(`${cartMenuFood[key].qty}x ${cartMenuFood[key].nama}`);
         totalHargaMenu += cartMenuFood[key].qty * cartMenuFood[key].harga;
       }
     }
-
     terpilihMenuNama = ringkasanMenu.join(', ');
     terpilihMenuHarga = totalHargaMenu;
     jenisLayanan = 'FOOD';
-
     coordsAsal = restoCoordsAktif;
-
     document.getElementById('summaryMenuText').innerText = `${terpilihMenuNama} (Rp ${totalHargaMenu.toLocaleString('id-ID')})`;
     document.getElementById('rowMenuSummary').style.display = 'flex';
-
     navigasiKe('servicePage');
     document.getElementById('lokasiAsal').value = `${terpilihRestoNama} - ${restoAlamatAktif}`;
-
     aturTemaHeaderDanTombol('FOOD');
     setTimeout(() => { initMapGojekStyle(); pilihModePeta('tujuan'); fetchAndDrawRoute(); }, 200);
   }
@@ -1185,7 +1174,6 @@
   function bukaLayanan(jenis) {
     if (!currentUser) { alert("Silakan login terlebih dahulu!"); document.getElementById('authScreen').style.display = 'flex'; return; }
     if (jenis === 'FOOD') { bukaAntarinFoodHome(); return; }
-
     jenisLayanan = jenis;
     document.getElementById('rowMenuSummary').style.display = 'none';
     navigasiKe('servicePage');
@@ -1211,16 +1199,10 @@
     const pageHeader = document.getElementById('pageHeader');
     const pageTitle = document.getElementById('pageTitle');
     const btnPesanAction = document.getElementById('btnPesanAction');
-
-    if (jenis === 'RIDE') {
-      pageHeader.className = 'page-header theme-ride'; pageTitle.innerText = 'Antarin Ride (Ojek Motor)'; btnPesanAction.style.background = '#00880c';
-    } else if (jenis === 'FOOD') {
-      pageHeader.className = 'page-header theme-food'; pageTitle.innerText = 'Antarin Food (Pesan Makanan)'; btnPesanAction.style.background = '#d32f2f';
-    } else if (jenis === 'SHOP') {
-      pageHeader.className = 'page-header theme-shop'; pageTitle.innerText = 'Antarin Shop (GoShop maks 30kg)'; btnPesanAction.style.background = '#7b1fa2';
-    } else if (jenis === 'SEND') {
-      pageHeader.className = 'page-header theme-send'; pageTitle.innerText = 'Antarin Send (GoSend maks 30kg)'; btnPesanAction.style.background = '#1976d2';
-    }
+    if (jenis === 'RIDE') { pageHeader.className = 'page-header theme-ride'; pageTitle.innerText = 'Antarin Ride'; btnPesanAction.style.background = '#00880c'; }
+    else if (jenis === 'FOOD') { pageHeader.className = 'page-header theme-food'; pageTitle.innerText = 'Antarin Food'; btnPesanAction.style.background = '#d32f2f'; }
+    else if (jenis === 'SHOP') { pageHeader.className = 'page-header theme-shop'; pageTitle.innerText = 'Antarin Shop'; btnPesanAction.style.background = '#7b1fa2'; }
+    else if (jenis === 'SEND') { pageHeader.className = 'page-header theme-send'; pageTitle.innerText = 'Antarin Send'; btnPesanAction.style.background = '#1976d2'; }
   }
 
   function tutupLayanan() { kembaliKeSebelumnya(); }
@@ -1267,9 +1249,7 @@
         if (isUpdatingMapFromInput) return;
         if (jenisLayanan !== 'FOOD') prosesAmbilAlamatTengahPeta(); 
       });
-      if (jenisLayanan !== 'FOOD') {
-        reverseGeocodeLokasiSpesifik(coordsAsal[1], coordsAsal[0], 'asal');
-      }
+      if (jenisLayanan !== 'FOOD') reverseGeocodeLokasiSpesifik(coordsAsal[1], coordsAsal[0], 'asal');
       reverseGeocodeLokasiSpesifik(coordsTujuan[1], coordsTujuan[0], 'tujuan');
       fetchAndDrawRoute();
     });
@@ -1281,36 +1261,19 @@
       const url = `https://router.project-osrm.org/route/v1/driving/${coordsAsal[0]},${coordsAsal[1]};${coordsTujuan[0]},${coordsTujuan[1]}?overview=full&geometries=geojson`;
       const response = await fetch(url);
       const data = await response.json();
-
       if (data.routes && data.routes.length > 0) {
         const routeObj = data.routes[0];
         routeCoordinatesCache = routeObj.geometry.coordinates;
-
-        const jarakKM = routeObj.distance / 1000;
-        updateKalkulasiTarifCustom(jarakKM);
-
-        const geojson = {
-          type: 'Feature',
-          properties: {},
-          geometry: { type: 'LineString', coordinates: routeCoordinatesCache }
-        };
-
+        updateKalkulasiTarifCustom(routeObj.distance / 1000);
+        const geojson = { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: routeCoordinatesCache } };
         if (map.getSource(sourceId)) {
           map.getSource(sourceId).setData(geojson);
         } else {
           map.addSource(sourceId, { type: 'geojson', data: geojson });
-          map.addLayer({
-            id: layerId,
-            type: 'line',
-            source: sourceId,
-            layout: { 'line-join': 'round', 'line-cap': 'round' },
-            paint: { 'line-color': '#00880c', 'line-width': 4 }
-          });
+          map.addLayer({ id: layerId, type: 'line', source: sourceId, layout: { 'line-join': 'round', 'line-cap': 'round' }, paint: { 'line-color': '#00880c', 'line-width': 4 } });
         }
       }
-    } catch (e) {
-      routeCoordinatesCache = [coordsAsal, coordsTujuan];
-    }
+    } catch (e) { routeCoordinatesCache = [coordsAsal, coordsTujuan]; }
   }
 
   function prosesAmbilAlamatTengahPeta() {
@@ -1329,11 +1292,8 @@
     let fallbackText = `Lokasi (${lat.toFixed(5)}, ${lon.toFixed(5)})`;
     if (target === 'asal') document.getElementById('lokasiAsal').value = fallbackText;
     else document.getElementById('lokasiTujuan').value = fallbackText;
-
     try {
-      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`, {
-        headers: { 'Accept-Language': 'id' }
-      });
+      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`, { headers: { 'Accept-Language': 'id' } });
       const data = await response.json();
       if (data && data.display_name) {
         if (target === 'asal') document.getElementById('lokasiAsal').value = data.display_name;
@@ -1347,7 +1307,6 @@
     modeAktif = mode;
     document.getElementById('groupAsal').classList.remove('active-focus');
     document.getElementById('groupTujuan').classList.remove('active-focus');
-
     if (mode === 'asal') {
       document.getElementById('groupAsal').classList.add('active-focus');
       document.getElementById('pinLabelBadge').innerText = '📍 Atur Lokasi Jemput';
@@ -1367,9 +1326,7 @@
     if (jenisLayanan === 'FOOD' && target === 'asal') return;
     pilihModePeta(target);
     const boxId = target === 'asal' ? 'autoBoxAsal' : 'autoBoxTujuan';
-    document.getElementById(boxId).innerHTML = `
-      <div class="autocomplete-gps-option" onclick="ambilLokasiGPS('${target}')">📍 Gunakan Lokasi Saat Ini (GPS Perangkat)</div>
-    `;
+    document.getElementById(boxId).innerHTML = `<div class="autocomplete-gps-option" onclick="ambilLokasiGPS('${target}')">📍 Gunakan Lokasi Saat Ini (GPS Perangkat)</div>`;
     document.getElementById(boxId).style.display = 'block';
   }
 
@@ -1380,7 +1337,6 @@
         const lon = position.coords.longitude;
         if (target === 'asal') coordsAsal = [lon, lat];
         else coordsTujuan = [lon, lat];
-
         if (map) {
           isUpdatingMapFromInput = true;
           map.flyTo({ center: [lon, lat], zoom: 16 });
@@ -1400,9 +1356,7 @@
     clearTimeout(debounceTimer);
     const boxId = target === 'asal' ? 'autoBoxAsal' : 'autoBoxTujuan';
     const boxResults = document.getElementById(boxId);
-
     if (!query || query.length < 2) { tampilkanMenuGPS(target); return; }
-
     debounceTimer = setTimeout(async () => {
       try {
         let response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=id&limit=5&accept-language=id`);
@@ -1414,23 +1368,12 @@
             div.className = 'autocomplete-row';
             div.innerText = item.display_name;
             div.onclick = () => {
-              const selectedLon = parseFloat(item.lon);
-              const selectedLat = parseFloat(item.lat);
-              
+              const selectedLon = parseFloat(item.lon), selectedLat = parseFloat(item.lat);
               isUpdatingMapFromInput = true;
-              if (target === 'asal') { 
-                coordsAsal = [selectedLon, selectedLat]; 
-                document.getElementById('lokasiAsal').value = item.display_name; 
-              } else { 
-                coordsTujuan = [selectedLon, selectedLat]; 
-                document.getElementById('lokasiTujuan').value = item.display_name; 
-              }
+              if (target === 'asal') { coordsAsal = [selectedLon, selectedLat]; document.getElementById('lokasiAsal').value = item.display_name; }
+              else { coordsTujuan = [selectedLon, selectedLat]; document.getElementById('lokasiTujuan').value = item.display_name; }
               boxResults.style.display = 'none';
-
-              if (map) {
-                map.flyTo({ center: [selectedLon, selectedLat], zoom: 16 });
-                setTimeout(() => { isUpdatingMapFromInput = false; }, 500);
-              }
+              if (map) { map.flyTo({ center: [selectedLon, selectedLat], zoom: 16 }); setTimeout(() => { isUpdatingMapFromInput = false; }, 500); }
               fetchAndDrawRoute('route-form', 'route-form');
             };
             boxResults.appendChild(div);
@@ -1453,22 +1396,15 @@
   let totalBayarGlobal = 0;
   function updateKalkulasiTarifCustom(jarakKM) {
     const jarakFormatted = jarakKM < 0.5 ? 0.5 : jarakKM; 
-    
     let tarifPerKM = 2500, biayabase = 4000, tarifMinimum = 9000;
     if (jenisLayanan === 'FOOD') { tarifPerKM = 2000; biayabase = 3000; tarifMinimum = 8500; }
     else if (jenisLayanan === 'SEND' || jenisLayanan === 'SHOP') {
       if (tierBarang === 2) { tarifPerKM = 3000; biayabase = 6500; tarifMinimum = 13000; }
     }
-
     let totalOngkir = biayabase + (jarakFormatted * tarifPerKM);
     if (totalOngkir < tarifMinimum) totalOngkir = tarifMinimum;
-
-    let tarifOngkir = Math.round(totalOngkir);
-    let biayaAplikasi = 2000;
-    let baseHargaMenu = (jenisLayanan === 'FOOD') ? terpilihMenuHarga : 0;
-    
+    let tarifOngkir = Math.round(totalOngkir), biayaAplikasi = 2000, baseHargaMenu = (jenisLayanan === 'FOOD') ? terpilihMenuHarga : 0;
     totalBayarGlobal = baseHargaMenu + tarifOngkir + biayaAplikasi;
-
     document.getElementById('textJarakKM').innerText = jarakFormatted.toFixed(1) + " KM";
     document.getElementById('textTarifOngkir').innerText = "Rp " + tarifOngkir.toLocaleString('id-ID');
     document.getElementById('totalBayar').innerText = "Rp " + totalBayarGlobal.toLocaleString('id-ID');
@@ -1476,7 +1412,6 @@
 
   function mulaiPesanOrder() {
     if (!window.firebaseDb) { alert("Koneksi database sedang dimuat."); return; }
-
     const noHpInput = document.getElementById('inputNoHPCustomerCheckout').value.trim();
     if (!noHpInput || noHpInput.length < 10) { alert("Masukkan No. HP pemesan yang valid."); return; }
 
@@ -1486,59 +1421,41 @@
     const tujuanVal = document.getElementById('lokasiTujuan').value;
 
     let labelLayananFull = "Antarin Ride";
-    if (jenisLayanan === 'FOOD') {
-      labelLayananFull = "Antarin Food (" + terpilihMenuNama + ")";
-    } else if (jenisLayanan === 'SEND') {
+    if (jenisLayanan === 'FOOD') labelLayananFull = "Antarin Food (" + terpilihMenuNama + ")";
+    else if (jenisLayanan === 'SEND') {
       const namaPenerima = document.getElementById('sendPenerimaNama').value || "Penerima";
       const kategori = document.getElementById('sendKategoriBarang').value;
-      labelLayananFull = `Antarin Send (${kategori} untuk ${namaPenerima} - Maks 30kg)`;
+      labelLayananFull = `Antarin Send (${kategori} untuk ${namaPenerima})`;
     } else if (jenisLayanan === 'SHOP') {
       const namaToko = document.getElementById('shopNamaToko').value || "Toko Umum";
-      labelLayananFull = `Antarin Shop (Belanja di ${namaToko} - Maks 30kg)`;
+      labelLayananFull = `Antarin Shop (${namaToko})`;
     }
 
-    // Hanya menggunakan metode QRIS (Midtrans)
     panggilMidtransSnapAsli(activeOrderId, totalBayarGlobal, labelLayananFull, generatedPin, asalVal, tujuanVal, noHpInput);
   }
 
   function panggilMidtransSnapAsli(orderId, amount, itemName, pin, asal, tujuan, noHp) {
     const transactionId = 'ANTARIN-' + orderId;
-    const vercelBackendUrl = 'https://antarin-backend.vercel.app/api/get-token';
-
-    fetch(vercelBackendUrl, {
+    fetch('https://antarin-backend.vercel.app/api/get-token', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        order_id: transactionId, 
-        gross_amount: amount, 
-        item_name: itemName 
-      })
+      body: JSON.stringify({ order_id: transactionId, gross_amount: amount, item_name: itemName })
     })
     .then(res => res.json())
     .then(data => {
       if (data.token) {
         window.snap.pay(data.token, {
-          onSuccess: function(result) {
+          onSuccess: function() {
             alert("Pembayaran QRIS Berhasil!");
             eksekusiKirimOrderFirebase(orderId, pin, asal, tujuan, itemName, noHp);
           },
-          onPending: function(result) {
-            alert("Silakan selesaikan pembayaran QRIS Anda.");
-          },
-          onError: function(result) {
-            alert("Pembayaran Gagal!");
-          },
-          onClose: function() {
-            alert('Popup pembayaran ditutup.');
-          }
+          onPending: function() { alert("Selesaikan pembayaran QRIS."); },
+          onError: function() { alert("Pembayaran Gagal!"); },
+          onClose: function() { alert('Popup pembayaran ditutup.'); }
         });
-      } else {
-        alert("Gagal mendapatkan Token Pembayaran dari Server Vercel.");
-      }
+      } else { alert("Gagal mendapatkan Token Pembayaran."); }
     })
-    .catch(err => {
-      alert("Terjadi kesalahan koneksi ke backend: " + err.message);
-    });
+    .catch(err => { alert("Error koneksi backend: " + err.message); });
   }
 
   function eksekusiKirimOrderFirebase(orderId, generatedPin, asalVal, tujuanVal, labelLayananFull, noHp) {
@@ -1554,52 +1471,46 @@
       total: totalBayarGlobal,
       paymentMethod: 'QRIS',
       pin: generatedPin,
-      status: "SEARCHING", 
+      status: "SEARCHING",
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' WIB'
     }).then(() => {
       document.getElementById('searchingModal').style.display = 'flex';
       listenToOrderStatus(orderId);
-    }).catch((error) => { alert("Gagal mengirim pesanan: " + error.message); });
+    }).catch((error) => { alert("Gagal kirim order: " + error.message); });
   }
 
   function batalkanPesananOlehCustomer() {
-    if (activeOrderId) {
-      window.firebaseRemove(window.firebaseRef(window.firebaseDb, 'orders/' + activeOrderId));
-    }
-    if (orderDataListener) {
-      orderDataListener();
-    }
+    if (activeOrderId) window.firebaseRemove(window.firebaseRef(window.firebaseDb, 'orders/' + activeOrderId));
+    if (orderDataListener) orderDataListener();
     document.getElementById('searchingModal').style.display = 'none';
     alert("Pesanan dibatalkan.");
   }
 
   function listenToOrderStatus(orderId) {
     const orderRef = window.firebaseRef(window.firebaseDb, 'orders/' + orderId);
-    
     orderDataListener = window.firebaseOnValue(orderRef, (snapshot) => {
       const data = snapshot.val();
       if (!data) return;
 
       if (data.status === 'ACCEPTED' || data.status === 'PROCESS') {
         document.getElementById('searchingModal').style.display = 'none';
-        
         if (data.driverName) {
           document.getElementById('driverNameText').innerText = data.driverName;
           document.getElementById('driverAvatarInitial').innerText = data.driverName.charAt(0).toUpperCase();
         }
-        if (data.driverVehicle) {
-          document.getElementById('driverVehicleText').innerText = data.driverVehicle;
+        if (data.driverVehicle) document.getElementById('driverVehicleText').innerText = data.driverVehicle;
+
+        if (data.driverPhone) {
+          document.getElementById('btnRealCall').href = "tel:" + data.driverPhone;
+          document.getElementById('btnRealWA').href = "https://wa.me/" + data.driverPhone.replace(/[^0-9]/g, '');
         }
 
         catatRiwayat(data.layanan + " (#" + orderId + ")", totalBayarGlobal, "keluar");
         navigasiKe('trackingPage');
-        
-        setTimeout(() => {
-          initTrackingMapRealtime(data);
-        }, 200);
+        setTimeout(() => { initTrackingMapRealtime(data); }, 200);
       } 
       else if (data.status === 'COMPLETED') {
-        alert("Pesanan Selesai! Terima kasih telah menggunakan Antarin.");
+        alert("Pesanan Selesai!");
         viewStack = ['viewCustomerBeranda', 'viewRiwayat'];
         navigasiKe('viewRiwayat');
         renderRiwayatTransaksi();
@@ -1610,50 +1521,34 @@
 
   function initTrackingMapRealtime(orderData) {
     if (trackingMap) { trackingMap.resize(); return; }
-
     trackingMap = new maplibregl.Map({
       container: 'trackingMapContainer',
       style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
       center: coordsAsal,
       zoom: 15
     });
-
     trackingMap.on('load', function() {
       fetchAndDrawRouteOnTracking();
-
       const elAsal = document.createElement('div'); elAsal.innerHTML = '💜'; elAsal.style.fontSize = '26px';
       new maplibregl.Marker({ element: elAsal }).setLngLat(coordsAsal).addTo(trackingMap);
-
       const elTujuan = document.createElement('div'); elTujuan.innerHTML = '🟢'; elTujuan.style.fontSize = '26px';
       new maplibregl.Marker({ element: elTujuan }).setLngLat(coordsTujuan).addTo(trackingMap);
 
       const driverStartCoords = orderData.driverCoords || [coordsAsal[0] + 0.003, coordsAsal[1] + 0.003];
       const driverEl = document.createElement('div'); driverEl.innerHTML = '🛵'; driverEl.style.fontSize = '30px';
       driverMarker = new maplibregl.Marker({ element: driverEl }).setLngLat(driverStartCoords).addTo(trackingMap);
-
       trackDriverGPSRealtime();
     });
   }
 
   async function fetchAndDrawRouteOnTracking() {
     try {
-      const url = `https://router.project-osrm.org/route/v1/driving/${coordsAsal[0]},${coordsAsal[1]};${coordsTujuan[0]},${coordsTujuan[1]}?overview=full&geometries=geojson`;
-      const response = await fetch(url);
+      const response = await fetch(`https://router.project-osrm.org/route/v1/driving/${coordsAsal[0]},${coordsAsal[1]};${coordsTujuan[0]},${coordsTujuan[1]}?overview=full&geometries=geojson`);
       const data = await response.json();
       if (data.routes && data.routes.length > 0) {
         routeCoordinatesCache = data.routes[0].geometry.coordinates;
-
-        trackingMap.addSource('route-track', {
-          type: 'geojson',
-          data: { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: routeCoordinatesCache } }
-        });
-        trackingMap.addLayer({
-          id: 'route-track-layer',
-          type: 'line',
-          source: 'route-track',
-          layout: { 'line-join': 'round', 'line-cap': 'round' },
-          paint: { 'line-color': '#00880c', 'line-width': 4 }
-        });
+        trackingMap.addSource('route-track', { type: 'geojson', data: { type: 'Feature', properties: {}, geometry: { type: 'LineString', coordinates: routeCoordinatesCache } } });
+        trackingMap.addLayer({ id: 'route-track-layer', type: 'line', source: 'route-track', layout: { 'line-join': 'round', 'line-cap': 'round' }, paint: { 'line-color': '#00880c', 'line-width': 4 } });
       }
     } catch (e) {}
   }
@@ -1661,13 +1556,12 @@
   function trackDriverGPSRealtime() {
     if (!activeOrderId) return;
     const driverLocationRef = window.firebaseRef(window.firebaseDb, 'orders/' + activeOrderId + '/driverCoords');
-    
     window.firebaseOnValue(driverLocationRef, (snapshot) => {
       const latLon = snapshot.val();
       if (latLon && Array.isArray(latLon)) {
         driverMarker.setLngLat(latLon);
         trackingMap.easeTo({ center: latLon, duration: 0, animate: false });
-        document.getElementById('trackingStatusText').innerText = "🛵 Driver sedang menuju lokasi Anda...";
+        document.getElementById('trackingStatusText').innerText = "🛵 Driver sedang bergerak menuju lokasi Anda secara real-time!";
       }
     });
   }
