@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Antarin Food - Aplikasi Konsumen</title>
+  <title>Antarin - SuperApp Konsumen</title>
 
   <!-- CSS MapLibre GL -->
   <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
@@ -47,6 +47,13 @@
     .home-content { padding: 0 16px 80px 16px; flex-grow: 1; }
     .promo-banner { background: linear-gradient(135deg, #00880c, #00b012); border-radius: 16px; padding: 16px; color: white; margin-bottom: 16px; }
 
+    /* Daftar Resto Pilihan di Beranda */
+    .section-title { font-size: 14px; font-weight: bold; color: #111; margin-bottom: 10px; }
+    .merchant-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .merchant-card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    .merchant-info h5 { font-size: 13px; font-weight: bold; color: #111; margin-bottom: 2px; }
+    .merchant-info p { font-size: 11px; color: #666; }
+
     /* Bottom Nav Bar */
     .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 412px; background: white; border-top: 1px solid #eee; display: flex; justify-content: space-around; padding: 10px 0; z-index: 10; }
     .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #757575; font-weight: 600; cursor: pointer; }
@@ -81,7 +88,7 @@
     .account-menu-left { display: flex; align-items: center; gap: 12px; }
     .account-menu-icon { font-size: 16px; }
 
-    /* FULLSCREEN OVERLAY LAYANAN */
+    /* FULLSCREEN OVERLAY LAYANAN / PEMESANAN */
     .service-page { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; z-index: 50; display: none; flex-direction: column; overflow-y: auto; }
     .page-header { padding: 14px 16px; background: #ffffff; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 60; }
     .page-header.theme-food { background: #d32f2f; color: white; }
@@ -92,7 +99,7 @@
     .page-title { font-size: 16px; font-weight: bold; flex-grow: 1; }
 
     /* PETA & PIN POINT */
-    .map-wrapper { position: relative; width: 100%; height: 230px; border-radius: 16px; overflow: hidden; border: 1px solid #e0e0e0; margin-bottom: 4px; }
+    .map-wrapper { position: relative; width: 100%; height: 210px; border-radius: 16px; overflow: hidden; border: 1px solid #e0e0e0; margin-bottom: 4px; }
     #mapContainer { width: 100%; height: 100%; }
     
     .center-pin-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -100%); z-index: 20; pointer-events: none; font-size: 34px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); }
@@ -145,22 +152,20 @@
 
 <div class="app-screen">
 
-  <!-- HALAMAN LOGIN / REGISTER (GOOGLE + WAJIB INPUT NO HP) -->
+  <!-- HALAMAN LOGIN / REGISTER -->
   <div class="auth-screen" id="authScreen">
-    <div class="auth-logo">Antarin Food</div>
+    <div class="auth-logo">Antarin</div>
     <div class="auth-subtitle">Masuk dengan Akun Google untuk melanjutkan</div>
 
-    <!-- TAHAP 1: TOMBOL GOOGLE -->
     <div id="authStepGoogle">
       <button class="auth-btn google" onclick="loginGoogleAsli()">
         <span>🌐</span> Masuk dengan Akun Google
       </button>
     </div>
 
-    <!-- TAHAP 2: WAJIB MASUKKAN NO HP SETELAH GOOGLE -->
     <div id="authStepPhone" style="display: none;">
       <div style="font-size: 13px; color: #333; margin-bottom: 8px; font-weight: bold;">Langkah Terakhir: Masukkan Nomor WhatsApp / HP Aktif</div>
-      <div style="font-size: 11px; color: #666; margin-bottom: 12px;">Nomor ini dibutuhkan driver untuk menghubungi Anda saat pengantaran makanan.</div>
+      <div style="font-size: 11px; color: #666; margin-bottom: 12px;">Nomor ini dibutuhkan driver untuk menghubungi Anda saat pengantaran.</div>
       <input type="tel" id="inputNoHPCustomer" class="auth-input" placeholder="Contoh: 081234567890">
       <button class="auth-btn primary" onclick="simpanNomorHPProfil()">Simpan & Masuk ke Aplikasi</button>
     </div>
@@ -171,7 +176,7 @@
     <div class="top-bar">
       <div class="search-box">
         <span>🔍</span>
-        <input type="text" placeholder="Mau cari makanan apa hari ini?">
+        <input type="text" placeholder="Mau cari makanan atau layanan apa hari ini?">
       </div>
       <div class="profile-icon" id="userInitialTopBtn" onclick="pindahTab('akun')" title="Profil Akun">U</div>
     </div>
@@ -179,26 +184,44 @@
     <div class="services-grid">
       <div class="service-item" onclick="bukaLayanan('RIDE')">
         <div class="icon-wrapper bg-ride">🛵</div>
-        <span class="service-label">AntarinRide</span>
+        <span class="service-label">Antarin Ride</span>
       </div>
       <div class="service-item" onclick="bukaLayanan('FOOD')">
         <div class="icon-wrapper bg-food">🍔</div>
-        <span class="service-label">AntarinFood</span>
+        <span class="service-label">Antarin Food</span>
       </div>
       <div class="service-item" onclick="bukaLayanan('SHOP')">
         <div class="icon-wrapper bg-shop">🛍️</div>
-        <span class="service-label">AntarinShop</span>
+        <span class="service-label">Antarin Shop</span>
       </div>
       <div class="service-item" onclick="bukaLayanan('SEND')">
         <div class="icon-wrapper bg-send">📦</div>
-        <span class="service-label">AntarinSend</span>
+        <span class="service-label">Antarin Send</span>
       </div>
     </div>
 
     <div class="home-content">
       <div class="promo-banner">
         <h4>Diskon 50% Pengguna Baru!</h4>
-        <p>Pakai kode promo <strong>ANTARINAJA</strong> untuk pesanan pertamamu.</p>
+        <p>Nikmati kemudahan pesan makanan dan perjalanan dengan <strong>ANTARINAJA</strong>.</p>
+      </div>
+
+      <div class="section-title">🍜 Restoran Pilihan Terdekat</div>
+      <div class="merchant-list">
+        <div class="merchant-card" onclick="bukaLayanan('FOOD')">
+          <div class="merchant-info">
+            <h5>Ayam Bakar Madu Express</h5>
+            <p>⭐ 4.9 • Nusantara, Ayam & Bebek • 1.2 km</p>
+          </div>
+          <span style="font-size: 12px; color: #00880c; font-weight: bold;">Pesan ›</span>
+        </div>
+        <div class="merchant-card" onclick="bukaLayanan('FOOD')">
+          <div class="merchant-info">
+            <h5>Nasi Goreng Spesial Bang Jago</h5>
+            <p>⭐ 4.8 • Aneka Nasi & Mie • 2.5 km</p>
+          </div>
+          <span style="font-size: 12px; color: #00880c; font-weight: bold;">Pesan ›</span>
+        </div>
       </div>
     </div>
   </div>
@@ -214,7 +237,7 @@
   <!-- VIEW 3: CHAT -->
   <div class="app-view" id="viewChat" style="padding: 24px; text-align: center; color: #666; justify-content: center;">
     <h3>💬 Pesan & Bantuan</h3>
-    <p style="font-size: 13px; margin-top: 8px;">Belum ada percakapan aktif dengan driver.</p>
+    <p style="font-size: 13px; margin-top: 8px;">Belum ada percakapan aktif dengan mitra driver.</p>
   </div>
 
   <!-- VIEW 4: PENGATURAN AKUN -->
@@ -233,11 +256,11 @@
       </div>
 
       <div class="account-menu-group">
-        <div class="account-menu-item" onclick="alert('Pusat Bantuan Antarin Food 24/7 siap melayani kendala pesananmu.')">
+        <div class="account-menu-item" onclick="alert('Pusat Bantuan Antarin 24/7 siap melayani kendala pesananmu.')">
           <div class="account-menu-left"><span class="account-menu-icon">🎧</span><span>Pusat Bantuan & Layanan</span></div>
           <span>›</span>
         </div>
-        <div class="account-menu-item" onclick="alert('Antarin Food v1.6.0 - Google + Phone Integration.')">
+        <div class="account-menu-item" onclick="alert('Antarin SuperApp v1.8.0 - Back Button Handling.')">
           <div class="account-menu-left"><span class="account-menu-icon">ℹ️</span><span>Tentang Aplikasi Antarin</span></div>
           <span>›</span>
         </div>
@@ -378,19 +401,16 @@
 
   let googleUserTemp = null;
 
-  // 1. Login Google Asli (Gratis & Bebas Error Billing)
   window.loginGoogleAsli = function() {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
       .then((result) => {
         googleUserTemp = result.user;
-        // Cek apakah user ini sudah pernah simpan nomor HP di localstorage sebelumnya
         let savedPhone = localStorage.getItem('antarin_phone_' + googleUserTemp.email);
         if (savedPhone) {
-          localStorage.setItem('antarin_user', googleUserTemp.displayName + " (" + savedPhone + ")");
+          localStorage.setItem('antarin_user', googleUserTemp.displayName + " - " + savedPhone);
           location.reload();
         } else {
-          // Jika belum, arahkan ke tahap input nomor HP
           document.getElementById('authStepGoogle').style.display = 'none';
           document.getElementById('authStepPhone').style.display = 'block';
         }
@@ -400,7 +420,6 @@
       });
   };
 
-  // 2. Simpan Nomor HP yang diinput customer setelah login Google
   window.simpanNomorHPProfil = function() {
     const noHp = document.getElementById('inputNoHPCustomer').value.trim();
     if (!noHp || noHp.length < 10) {
@@ -445,7 +464,28 @@
   window.onload = function() {
     cekStatusLogin();
     renderRiwayatTransaksi();
+    inisialisasiTombolBackHP();
   };
+
+  // --- CEGAH KELUAR APLIKASI SAAT TOMBOL BACK HP DITEKAN ---
+  function inisialisasiTombolBackHP() {
+    window.history.pushState({page: 'home'}, '', '');
+    window.addEventListener('popstate', function(event) {
+      const servicePage = document.getElementById('servicePage');
+      const trackingPage = document.getElementById('trackingPage');
+
+      if (trackingPage.style.display === 'flex') {
+        trackingPage.style.display = 'none';
+        pindahTab('beranda');
+      } else if (servicePage.style.display === 'flex') {
+        servicePage.style.display = 'none';
+      } else {
+        // Jika di beranda tapi buka tab lain (riwayat/chat/akun), kembalikan ke beranda dulu
+        pindahTab('beranda');
+      }
+      window.history.pushState({page: 'home'}, '', '');
+    });
+  }
 
   function cekStatusLogin() {
     if (!currentUser) {
@@ -724,7 +764,7 @@
 
   let totalBayarGlobal = 0;
   let tarifOngkirGlobal = 0;
-  let namaLayananAktif = "AntarinFood";
+  let namaLayananAktif = "Antarin Food";
 
   function hitungKalkulasiTarifOtomatis() {
     const jarakKM = hitungJarakHaversine(coordsAsal[0], coordsAsal[1], coordsTujuan[0], coordsTujuan[1]);
@@ -782,13 +822,13 @@
     }
 
     if (jenis === 'FOOD') {
-      pageHeader.className = 'page-header theme-food'; pageTitle.innerText = 'AntarinFood (Pesan Makanan)'; namaLayananAktif = 'AntarinFood'; btnPesanAction.style.background = '#d32f2f';
+      pageHeader.className = 'page-header theme-food'; pageTitle.innerText = 'Antarin Food (Pesan Makanan)'; namaLayananAktif = 'Antarin Food'; btnPesanAction.style.background = '#d32f2f';
     } else if (jenis === 'RIDE') {
-      pageHeader.className = 'page-header theme-ride'; pageTitle.innerText = 'AntarinRide (Ojek Motor)'; namaLayananAktif = 'AntarinRide'; btnPesanAction.style.background = '#00880c';
+      pageHeader.className = 'page-header theme-ride'; pageTitle.innerText = 'Antarin Ride (Ojek Motor)'; namaLayananAktif = 'Antarin Ride'; btnPesanAction.style.background = '#00880c';
     } else if (jenis === 'SHOP') {
-      pageHeader.className = 'page-header theme-shop'; pageTitle.innerText = 'AntarinShop (Belanja)'; namaLayananAktif = 'AntarinShop'; btnPesanAction.style.background = '#7b1fa2';
+      pageHeader.className = 'page-header theme-shop'; pageTitle.innerText = 'Antarin Shop (Belanja)'; namaLayananAktif = 'Antarin Shop'; btnPesanAction.style.background = '#7b1fa2';
     } else if (jenis === 'SEND') {
-      pageHeader.className = 'page-header theme-send'; pageTitle.innerText = 'AntarinSend (Kirim Paket)'; namaLayananAktif = 'AntarinSend'; btnPesanAction.style.background = '#1976d2';
+      pageHeader.className = 'page-header theme-send'; pageTitle.innerText = 'Antarin Send (Kirim Paket)'; namaLayananAktif = 'Antarin Send'; btnPesanAction.style.background = '#1976d2';
     }
 
     setTimeout(() => {
