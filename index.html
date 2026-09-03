@@ -3,12 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Antarin - SuperApp Konsumen</title>
+  <title>Antarin Food - SuperApp</title>
 
-  <!-- CSS MapLibre GL -->
   <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
 
-  <!-- Midtrans Snap JS -->
   <script type="text/javascript"
     src="https://app.sandbox.midtrans.com/snap/snap.js"
     data-client-key="Mid-client-uMKWjGQ8v2rq6-iP"></script>
@@ -18,7 +16,7 @@
     body { background-color: #f3f4f6; display: flex; justify-content: center; min-height: 100vh; }
     .app-screen { width: 100%; max-width: 412px; background: #ffffff; min-height: 100vh; display: flex; flex-direction: column; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.1); overflow: hidden; }
     
-    /* AUTH / LOGIN SCREEN */
+    /* AUTH SCREEN */
     .auth-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; z-index: 200; display: flex; flex-direction: column; padding: 24px; justify-content: center; }
     .auth-logo { font-size: 28px; font-weight: 900; color: #00880c; margin-bottom: 8px; text-align: center; }
     .auth-subtitle { font-size: 13px; color: #666; text-align: center; margin-bottom: 32px; }
@@ -26,15 +24,14 @@
     .auth-btn.google { border-color: #4285F4; color: #4285F4; }
     .auth-btn.primary { background: #00880c; color: white; border: none; }
     .auth-input { width: 100%; padding: 12px 16px; border: 1px solid #ddd; border-radius: 12px; font-size: 13px; outline: none; margin-bottom: 12px; }
-    .auth-input:focus { border-color: #00880c; }
 
-    /* Top Bar Beranda Utama */
+    /* TOP BAR */
     .top-bar { padding: 12px 16px 8px 16px; display: flex; gap: 10px; align-items: center; }
     .search-box { flex-grow: 1; background: #f1f2f5; border-radius: 24px; padding: 10px 16px; display: flex; align-items: center; gap: 8px; font-size: 14px; color: #727272; }
     .search-box input { border: none; background: transparent; outline: none; width: 100%; font-size: 13px; color: #333; }
     .profile-icon { width: 36px; height: 36px; background: #00880c; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; flex-shrink: 0; cursor: pointer; }
 
-    /* Grid Beranda Utama */
+    /* SERVICES GRID BERANDA UTAMA */
     .services-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 8px; padding: 16px; text-align: center; }
     .service-item { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
     .icon-wrapper { width: 52px; height: 52px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-bottom: 6px; }
@@ -47,90 +44,72 @@
     .home-content { padding: 0 16px 80px 16px; flex-grow: 1; }
     .promo-banner { background: linear-gradient(135deg, #00880c, #00b012); border-radius: 16px; padding: 16px; color: white; margin-bottom: 16px; }
 
-    /* Daftar Resto Pilihan di Beranda */
-    .section-title { font-size: 14px; font-weight: bold; color: #111; margin-bottom: 10px; }
-    .merchant-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
-    .merchant-card { background: white; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-    .merchant-info h5 { font-size: 13px; font-weight: bold; color: #111; margin-bottom: 2px; }
-    .merchant-info p { font-size: 11px; color: #666; }
-
-    /* Bottom Nav Bar */
+    /* BOTTOM NAV BAR */
     .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 412px; background: white; border-top: 1px solid #eee; display: flex; justify-content: space-around; padding: 10px 0; z-index: 10; }
     .nav-item { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: #757575; font-weight: 600; cursor: pointer; }
     .nav-item.active { color: #00880c; }
     .nav-icon { font-size: 18px; margin-bottom: 2px; }
 
-    /* VIEWS CONTAINER */
     .app-view { display: none; flex-direction: column; flex-grow: 1; padding-bottom: 80px; }
     .app-view.active { display: flex; }
 
-    /* RIWAYAT & AKUN HALAMAN */
-    .history-container { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
-    .history-card { background: white; border: 1px solid #eee; border-radius: 12px; padding: 12px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 6px rgba(0,0,0,0.02); }
-    .history-info { display: flex; flex-direction: column; gap: 3px; }
-    .history-title { font-size: 13px; font-weight: bold; color: #333; }
-    .history-date { font-size: 11px; color: #888; }
-    .history-amount { font-size: 13px; font-weight: bold; color: #00880c; }
+    /* HALAMAN UTAMA ANTARIN FOOD (Gojek Food Style) */
+    .food-home-page { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #f8f9fa; z-index: 40; display: none; flex-direction: column; overflow-y: auto; padding-bottom: 80px; }
+    .food-header { background: #d32f2f; color: white; padding: 16px; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 45; }
+    .food-banner-promo { background: linear-gradient(135deg, #d32f2f, #ff5252); border-radius: 16px; padding: 16px; color: white; margin: 16px; box-shadow: 0 4px 12px rgba(211,47,47,0.2); }
+    .food-categories { display: flex; gap: 10px; padding: 0 16px; overflow-x: auto; margin-bottom: 16px; }
+    .food-cat-chip { background: white; border: 1px solid #ddd; padding: 8px 14px; border-radius: 20px; font-size: 12px; font-weight: bold; color: #444; white-space: nowrap; cursor: pointer; }
+    .food-cat-chip.active { background: #ffebee; border-color: #d32f2f; color: #d32f2f; }
+    
+    .restaurant-card { background: white; border-radius: 14px; border: 1px solid #e5e7eb; overflow: hidden; margin: 0 16px 12px 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.02); display: flex; flex-direction: column; cursor: pointer; }
+    .restaurant-thumb { width: 100%; height: 130px; background: #e0e0e0; display: flex; align-items: center; justify-content: center; font-size: 32px; color: #666; font-weight: bold; }
+    .restaurant-details { padding: 12px; display: flex; flex-direction: column; gap: 4px; }
+    .restaurant-name { font-size: 14px; font-weight: bold; color: #111; }
+    .restaurant-meta { font-size: 11px; color: #666; display: flex; gap: 8px; align-items: center; }
 
-    /* HALAMAN AKUN STYLING */
-    .account-container { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
-    .account-profile-box { background: white; border: 1px solid #e0e0e0; border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
-    .account-avatar-large { width: 56px; height: 56px; background: #00880c; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: bold; flex-shrink: 0; }
-    .account-info-text { display: flex; flex-direction: column; gap: 4px; }
-    .account-name { font-size: 16px; font-weight: bold; color: #111; }
-    .account-phone { font-size: 13px; color: #666; word-break: break-all; }
-    .account-badge { font-size: 11px; background: #e8f5e9; color: #00880c; padding: 2px 8px; border-radius: 6px; font-weight: bold; display: inline-block; width: fit-content; margin-top: 2px; }
+    /* DETAIL RESTO & MENU (KASIR SIMULASI) */
+    .restaurant-detail-page { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; z-index: 50; display: none; flex-direction: column; overflow-y: auto; padding-bottom: 90px; }
+    .menu-item-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid #f0f0f0; }
+    .menu-info h5 { font-size: 13px; font-weight: bold; color: #111; margin-bottom: 2px; }
+    .menu-info p { font-size: 11px; color: #d32f2f; font-weight: bold; }
+    .btn-add-cart { background: #d32f2f; color: white; border: none; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; }
 
-    .account-menu-group { background: white; border: 1px solid #e0e0e0; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
-    .account-menu-item { padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f0f0f0; font-size: 13px; font-weight: 600; color: #333; cursor: pointer; }
-    .account-menu-item:last-child { border-bottom: none; }
-    .account-menu-item:hover { background: #f9fafb; }
-    .account-menu-left { display: flex; align-items: center; gap: 12px; }
-    .account-menu-icon { font-size: 16px; }
-
-    /* FULLSCREEN OVERLAY LAYANAN / PEMESANAN */
-    .service-page { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; z-index: 50; display: none; flex-direction: column; overflow-y: auto; }
-    .page-header { padding: 14px 16px; background: #ffffff; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 60; }
+    /* CHECKOUT OVERLAY (PETA & BAYAR) */
+    .service-page { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; z-index: 60; display: none; flex-direction: column; overflow-y: auto; }
+    .page-header { padding: 14px 16px; background: #ffffff; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 61; }
     .page-header.theme-food { background: #d32f2f; color: white; }
     .page-header.theme-ride { background: #00880c; color: white; }
-    .page-header.theme-send { background: #1976d2; color: white; }
-    .page-header.theme-shop { background: #7b1fa2; color: white; }
     .page-header .btn-back { font-size: 20px; border: none; background: none; cursor: pointer; color: inherit; }
     .page-title { font-size: 16px; font-weight: bold; flex-grow: 1; }
 
-    /* PETA & PIN POINT */
     .map-wrapper { position: relative; width: 100%; height: 210px; border-radius: 16px; overflow: hidden; border: 1px solid #e0e0e0; margin-bottom: 4px; }
     #mapContainer { width: 100%; height: 100%; }
-    
     .center-pin-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -100%); z-index: 20; pointer-events: none; font-size: 34px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3)); }
     .pin-label-badge { position: absolute; top: 32%; left: 50%; transform: translateX(-50%); background: #333; color: white; padding: 4px 10px; border-radius: 12px; font-size: 10px; font-weight: bold; z-index: 21; pointer-events: none; box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
-    .map-hint { font-size: 10px; color: #00880c; font-weight: bold; text-align: center; margin-bottom: 8px; }
+    .map-hint { font-size: 10px; color: #d32f2f; font-weight: bold; text-align: center; margin-bottom: 8px; }
 
     .page-content { padding: 16px; flex-grow: 1; display: flex; flex-direction: column; gap: 14px; padding-bottom: 100px; }
-
-    /* FORM STYLING & METODE PEMBAYARAN */
     .route-card { background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 12px; position: relative; z-index: 30; }
     .route-input-group { display: flex; align-items: center; gap: 10px; background: white; padding: 8px 12px; border-radius: 12px; border: 1px solid #ddd; }
-    .route-input-group.active-focus { border-color: #00880c; box-shadow: 0 0 0 2px rgba(0,136,12,0.15); }
+    .route-input-group.active-focus { border-color: #d32f2f; box-shadow: 0 0 0 2px rgba(211,47,47,0.15); }
     .dot-icon { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
     .dot-pickup { background-color: #7b1fa2; }
     .dot-destination { background-color: #00880c; }
     .route-input-group input { width: 100%; border: none; background: transparent; padding: 4px 0; font-size: 12px; color: #333; outline: none; }
 
     .autocomplete-wrapper { position: relative; width: 100%; }
-    .autocomplete-box { position: absolute; top: 100%; left: 0; width: 100%; background: #ffffff; border: 1px solid #00880c; border-radius: 0 0 12px 12px; max-height: 220px; overflow-y: auto; z-index: 999; box-shadow: 0 6px 16px rgba(0,0,0,0.2); display: none; }
-    .autocomplete-row { padding: 10px 12px; font-size: 12px; color: #333; border-bottom: 1px solid #f0f0f0; cursor: pointer; text-align: left; line-height: 1.3; }
-    .autocomplete-row:hover { background: #e8f5e9; color: #00880c; font-weight: bold; }
-    .autocomplete-gps-option { padding: 10px 12px; font-size: 12px; color: #00880c; background: #e8f5e9; font-weight: bold; border-bottom: 1px solid #c8e6c9; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+    .autocomplete-box { position: absolute; top: 100%; left: 0; width: 100%; background: #ffffff; border: 1px solid #d32f2f; border-radius: 0 0 12px 12px; max-height: 220px; overflow-y: auto; z-index: 999; box-shadow: 0 6px 16px rgba(0,0,0,0.2); display: none; }
+    .autocomplete-row { padding: 10px 12px; font-size: 12px; color: #333; border-bottom: 1px solid #f0f0f0; cursor: pointer; text-align: left; }
+    .autocomplete-row:hover { background: #ffebee; color: #d32f2f; font-weight: bold; }
+    .autocomplete-gps-option { padding: 10px 12px; font-size: 12px; color: #d32f2f; background: #ffebee; font-weight: bold; border-bottom: 1px solid #ffcdd2; cursor: pointer; display: flex; align-items: center; gap: 6px; }
 
-    /* PILIHAN PEMBAYARAN (CASH / QRIS) */
     .payment-options-dropdown { display: flex; gap: 8px; margin-top: 6px; }
     .pay-opt-btn { flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 8px; background: white; font-size: 12px; font-weight: bold; cursor: pointer; text-align: center; }
-    .pay-opt-btn.active { border-color: #00880c; background: #e8f5e9; color: #00880c; }
+    .pay-opt-btn.active { border-color: #d32f2f; background: #ffebee; color: #d32f2f; }
 
     .checkout-card { background: #ffffff; border: 1px solid #e0e0e0; border-radius: 16px; padding: 16px; }
     .price-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; color: #555; }
-    .btn-pesan { width: 100%; background: #00880c; color: white; border: none; padding: 14px; border-radius: 24px; font-size: 14px; font-weight: 700; margin-top: 12px; cursor: pointer; }
+    .btn-pesan { width: 100%; background: #d32f2f; color: white; border: none; padding: 14px; border-radius: 24px; font-size: 14px; font-weight: 700; margin-top: 12px; cursor: pointer; }
 
     /* TRACKING PAGE */
     .tracking-page { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; z-index: 70; display: none; flex-direction: column; overflow-y: auto; }
@@ -139,12 +118,12 @@
 
     .driver-card-live { background: #ffffff; border: 1px solid #eee; border-radius: 16px; padding: 16px; margin: -20px 16px 16px 16px; position: relative; z-index: 80; box-shadow: 0 4px 16px rgba(0,0,0,0.08); display: flex; flex-direction: column; gap: 12px; }
     .driver-profile { display: flex; align-items: center; gap: 12px; }
-    .driver-avatar { width: 46px; height: 46px; background: #00880c; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; }
+    .driver-avatar { width: 46px; height: 46px; background: #d32f2f; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 18px; }
     .driver-details { flex-grow: 1; display: flex; flex-direction: column; }
     .driver-name { font-size: 14px; font-weight: bold; color: #111; }
     .driver-vehicle { font-size: 12px; color: #666; }
     .action-row { display: flex; gap: 10px; }
-    .btn-action-chat { flex: 1; background: #00880c; color: white; border: none; padding: 12px; border-radius: 20px; font-weight: bold; font-size: 12px; cursor: pointer; }
+    .btn-action-chat { flex: 1; background: #d32f2f; color: white; border: none; padding: 12px; border-radius: 20px; font-weight: bold; font-size: 12px; cursor: pointer; }
     .btn-action-finish { flex: 1; background: #e65100; color: white; border: none; padding: 12px; border-radius: 20px; font-weight: bold; font-size: 12px; cursor: pointer; }
   </style>
 </head>
@@ -152,26 +131,21 @@
 
 <div class="app-screen">
 
-  <!-- HALAMAN LOGIN / REGISTER -->
   <div class="auth-screen" id="authScreen">
     <div class="auth-logo">Antarin</div>
     <div class="auth-subtitle">Masuk dengan Akun Google untuk melanjutkan</div>
-
     <div id="authStepGoogle">
       <button class="auth-btn google" onclick="loginGoogleAsli()">
         <span>🌐</span> Masuk dengan Akun Google
       </button>
     </div>
-
     <div id="authStepPhone" style="display: none;">
       <div style="font-size: 13px; color: #333; margin-bottom: 8px; font-weight: bold;">Langkah Terakhir: Masukkan Nomor WhatsApp / HP Aktif</div>
-      <div style="font-size: 11px; color: #666; margin-bottom: 12px;">Nomor ini dibutuhkan driver untuk menghubungi Anda saat pengantaran.</div>
       <input type="tel" id="inputNoHPCustomer" class="auth-input" placeholder="Contoh: 081234567890">
       <button class="auth-btn primary" onclick="simpanNomorHPProfil()">Simpan & Masuk ke Aplikasi</button>
     </div>
   </div>
 
-  <!-- VIEW 1: BERANDA KONSUMEN -->
   <div class="app-view active" id="viewCustomerBeranda">
     <div class="top-bar">
       <div class="search-box">
@@ -186,7 +160,7 @@
         <div class="icon-wrapper bg-ride">🛵</div>
         <span class="service-label">Antarin Ride</span>
       </div>
-      <div class="service-item" onclick="bukaLayanan('FOOD')">
+      <div class="service-item" onclick="bukaAntarinFoodHome()">
         <div class="icon-wrapper bg-food">🍔</div>
         <span class="service-label">Antarin Food</span>
       </div>
@@ -201,32 +175,86 @@
     </div>
 
     <div class="home-content">
-      <div class="promo-banner">
-        <h4>Diskon 50% Pengguna Baru!</h4>
-        <p>Nikmati kemudahan pesan makanan dan perjalanan dengan <strong>ANTARINAJA</strong>.</p>
+      <div class="promo-banner" onclick="bukaAntarinFoodHome()" style="cursor:pointer;">
+        <h4>Diskon Kuliner 50% Hari Ini!</h4>
+        <p>Pesan makanan favoritmu di Antarin Food sekarang.</p>
       </div>
 
-      <div class="section-title">🍜 Restoran Pilihan Terdekat</div>
-      <div class="merchant-list">
-        <div class="merchant-card" onclick="bukaLayanan('FOOD')">
-          <div class="merchant-info">
-            <h5>Ayam Bakar Madu Express</h5>
-            <p>⭐ 4.9 • Nusantara, Ayam & Bebek • 1.2 km</p>
+      <div style="font-size: 14px; font-weight: bold; color: #111; margin-bottom: 10px;">🍜 Restoran Pilihan Terdekat</div>
+      <div class="merchant-list" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+        <div class="restaurant-card" onclick="bukaDetailResto('Ayam Bakar Madu Express', 'Nusantara & Ayam')">
+          <div class="restaurant-thumb" style="background:#ffebee; color:#d32f2f;">🍗</div>
+          <div class="restaurant-details">
+            <div class="restaurant-name">Ayam Bakar Madu Express</div>
+            <div class="restaurant-meta"><span>⭐ 4.9 (1.2 km)</span> • <span>Nusantara & Bakaran</span></div>
           </div>
-          <span style="font-size: 12px; color: #00880c; font-weight: bold;">Pesan ›</span>
-        </div>
-        <div class="merchant-card" onclick="bukaLayanan('FOOD')">
-          <div class="merchant-info">
-            <h5>Nasi Goreng Spesial Bang Jago</h5>
-            <p>⭐ 4.8 • Aneka Nasi & Mie • 2.5 km</p>
-          </div>
-          <span style="font-size: 12px; color: #00880c; font-weight: bold;">Pesan ›</span>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- VIEW 2: RIWAYAT TRANSAKSI -->
+  <div class="food-home-page" id="foodHomePage">
+    <div class="food-header">
+      <button class="btn-back" onclick="tutupAntarinFoodHome()">←</button>
+      <span class="page-title">Antarin Food</span>
+    </div>
+
+    <div class="food-banner-promo">
+      <h3 style="font-size: 16px; margin-bottom: 4px;">Promo Spesial Hari Ini 🎉</h3>
+      <p style="font-size: 12px; opacity: 0.9;">Diskon s.d 50rb untuk seluruh menu kuliner nusantara.</p>
+    </div>
+
+    <div class="food-categories">
+      <div class="food-cat-chip active">Semua</div>
+      <div class="food-cat-chip">Ayam & Bebek</div>
+      <div class="food-cat-chip">Nasi & Mie</div>
+      <div class="food-cat-chip">Minuman & Jajanan</div>
+    </div>
+
+    <div style="padding: 0 16px 8px 16px; font-size: 14px; font-weight: bold; color: #111;">Daftar Restoran Terdekat</div>
+
+    <div class="restaurant-card" onclick="bukaDetailResto('Ayam Bakar Madu Express', 'Nusantara & Ayam')">
+      <div class="restaurant-thumb" style="background:#ffebee; color:#d32f2f;">🍗</div>
+      <div class="restaurant-details">
+        <div class="restaurant-name">Ayam Bakar Madu Express</div>
+        <div class="restaurant-meta"><span>⭐ 4.9 (1.2 km)</span> • <span>Nusantara & Bakaran</span></div>
+      </div>
+    </div>
+
+    <div class="restaurant-card" onclick="bukaDetailResto('Nasi Goreng Spesial Bang Jago', 'Aneka Nasi & Mie')">
+      <div class="restaurant-thumb" style="background:#fff3e0; color:#ef6c00;">🍳</div>
+      <div class="restaurant-details">
+        <div class="restaurant-name">Nasi Goreng Spesial Bang Jago</div>
+        <div class="restaurant-meta"><span>⭐ 4.8 (2.5 km)</span> • <span>Nasi & Mie</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="restaurant-detail-page" id="restaurantDetailPage">
+    <div class="page-header theme-food">
+      <button class="btn-back" onclick="tutupDetailResto()">←</button>
+      <span class="page-title" id="restoDetailTitle">Nama Resto</span>
+    </div>
+
+    <div style="padding: 16px 16px 8px 16px; font-size: 13px; font-weight: bold; color: #555;">Daftar Menu Makanan:</div>
+    
+    <div class="menu-item-row">
+      <div class="info-makanan">
+        <h5 id="namaMenu1">Paket Ayam Bakar Paha + Nasi</h5>
+        <p>Rp 25.300</p>
+      </div>
+      <button class="btn-add-cart" onclick="pilihMenuDanCheckout('Paket Ayam Bakar Paha + Nasi', 25300)">Pesan ›</button>
+    </div>
+
+    <div class="menu-item-row">
+      <div class="info-makanan">
+        <h5 id="namaMenu2">Es Teh Manis Jumbo</h5>
+        <p>Rp 5.750</p>
+      </div>
+      <button class="btn-add-cart" onclick="pilihMenuDanCheckout('Es Teh Manis Jumbo', 5750)">Pesan ›</button>
+    </div>
+  </div>
+
   <div class="app-view" id="viewRiwayat">
     <div class="page-header" style="position:static;">
       <span class="page-title" style="color:#00880c;">📋 Riwayat Pesanan</span>
@@ -234,45 +262,27 @@
     <div class="history-container" id="historyListContainer"></div>
   </div>
 
-  <!-- VIEW 3: CHAT -->
   <div class="app-view" id="viewChat" style="padding: 24px; text-align: center; color: #666; justify-content: center;">
     <h3>💬 Pesan & Bantuan</h3>
     <p style="font-size: 13px; margin-top: 8px;">Belum ada percakapan aktif dengan mitra driver.</p>
   </div>
 
-  <!-- VIEW 4: PENGATURAN AKUN -->
   <div class="app-view" id="viewAkun">
     <div class="page-header" style="position:static;">
       <span class="page-title" style="color:#00880c;">👤 Pengaturan Akun</span>
     </div>
-    <div class="account-container">
-      <div class="account-profile-box">
-        <div class="account-avatar-large" id="akunProfileBig">U</div>
-        <div class="account-info-text">
-          <div class="account-name" id="akunNamaUser">Pengguna Antarin</div>
-          <div class="account-phone" id="akunKontakUser">-</div>
-          <div class="account-badge">Customer Terverifikasi</div>
+    <div class="account-container" style="padding: 16px; display: flex; flex-direction: column; gap: 16px;">
+      <div class="account-profile-box" style="background: white; border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 16px;">
+        <div class="account-avatar-large" id="akunProfileBig" style="width: 56px; height: 56px; background: #00880c; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: bold;">U</div>
+        <div>
+          <div class="account-name" id="akunNamaUser" style="font-size: 16px; font-weight: bold;">Pengguna Antarin</div>
+          <div class="account-phone" id="akunKontakUser" style="font-size: 13px; color: #666;">-</div>
         </div>
       </div>
-
-      <div class="account-menu-group">
-        <div class="account-menu-item" onclick="alert('Pusat Bantuan Antarin 24/7 siap melayani kendala pesananmu.')">
-          <div class="account-menu-left"><span class="account-menu-icon">🎧</span><span>Pusat Bantuan & Layanan</span></div>
-          <span>›</span>
-        </div>
-        <div class="account-menu-item" onclick="alert('Antarin SuperApp v1.8.0 - Back Button Handling.')">
-          <div class="account-menu-left"><span class="account-menu-icon">ℹ️</span><span>Tentang Aplikasi Antarin</span></div>
-          <span>›</span>
-        </div>
-      </div>
-
-      <button class="auth-btn" style="border-color: #d32f2f; color: #d32f2f; margin-top: 8px;" onclick="logoutAkun()">
-        🚪 Keluar dari Akun
-      </button>
+      <button class="auth-btn" style="border-color: #d32f2f; color: #d32f2f;" onclick="logoutAkun()">🚪 Keluar dari Akun</button>
     </div>
   </div>
 
-  <!-- BOTTOM NAV BAR -->
   <div class="bottom-nav" id="bottomNavBar">
     <div class="nav-item active" id="navBeranda" onclick="pindahTab('beranda')"><div class="nav-icon">🏠</div>Beranda</div>
     <div class="nav-item" id="navRiwayat" onclick="pindahTab('riwayat')"><div class="nav-icon">📋</div>Riwayat</div>
@@ -280,38 +290,27 @@
     <div class="nav-item" id="navAkun" onclick="pindahTab('akun')"><div class="nav-icon">👤</div>Akun</div>
   </div>
 
-  <!-- LAYAR FORM LAYANAN -->
   <div class="service-page" id="servicePage">
     <div class="page-header theme-food" id="pageHeader">
       <button class="btn-back" onclick="tutupLayanan()">←</button>
-      <span class="page-title" id="pageTitle">Antarin Food</span>
+      <span class="page-title" id="pageTitle">Konfirmasi Pesanan</span>
     </div>
 
     <div class="page-content">
       <div class="map-wrapper">
         <div id="mapContainer"></div>
-        <div class="pin-label-badge" id="pinLabelBadge">📍 Atur Lokasi Asal</div>
-        <div class="center-pin-icon" id="centerPinIcon">💜</div>
+        <div class="pin-label-badge" id="pinLabelBadge">📍 Lokasi Pengantaran</div>
+        <div class="center-pin-icon" id="centerPinIcon">🟢</div>
       </div>
-      <div class="map-hint" id="mapHintText">📍 Geser peta untuk memilih Lokasi Resto / Penjemputan</div>
-
-      <div class="route-card" id="tierCard" style="display:none; padding:10px 14px;">
-        <div style="font-size:12px; font-weight:bold; margin-bottom:6px; color:#444;" id="tierLabelTitle">📦 Ukuran / Berat Barang:</div>
-        <div style="display:flex; gap:8px;">
-          <button type="button" id="btnTier1" onclick="pilihTierBarang(1)" style="flex:1; padding:8px; border:1px solid #00880c; background:#e8f5e9; color:#00880c; border-radius:8px; font-weight:bold; font-size:11px; cursor:pointer;">Kecil / Ringan (< 5kg)</button>
-          <button type="button" id="btnTier2" onclick="pilihTierBarang(2)" style="flex:1; padding:8px; border:1px solid #ddd; background:white; color:#555; border-radius:8px; font-weight:bold; font-size:11px; cursor:pointer;">Besar / Berat (> 5kg)</button>
-        </div>
-      </div>
+      <div class="map-hint" id="mapHintText">📍 Geser peta untuk menentukan Titik Pengantaran Anda</div>
 
       <div class="route-card">
         <div class="autocomplete-wrapper">
           <div class="route-input-group active-focus" id="groupAsal">
             <div class="dot-icon dot-pickup"></div>
-            <input type="text" id="lokasiAsal" placeholder="Lokasi Resto / Penjemputan..." autocomplete="off" onfocus="pilihModePeta('asal')" oninput="liveSearchLokasi(this.value, 'asal')" onclick="tampilkanMenuGPS('asal')">
+            <input type="text" id="lokasiAsal" readonly value="Resto Pilihan (Titik Jemput)">
           </div>
-          <div class="autocomplete-box" id="autoBoxAsal"></div>
         </div>
-        
         <div class="autocomplete-wrapper">
           <div class="route-input-group" id="groupTujuan">
             <div class="dot-icon dot-destination"></div>
@@ -330,23 +329,23 @@
       </div>
 
       <div class="checkout-card">
+        <div class="price-row"><span>Menu Dipilih</span><strong id="summaryMenuText">-</strong></div>
         <div class="price-row"><span>Perkiraan Jarak</span><strong id="textJarakKM">0.0 KM</strong></div>
-        <div class="price-row"><span>Tarif Perjalanan</span><strong id="textTarifOngkir">Rp 0</strong></div>
+        <div class="price-row"><span>Tarif Ongkir</span><strong id="textTarifOngkir">Rp 0</strong></div>
         <div class="price-row"><span>Biaya Jasa Aplikasi</span><strong>Rp 2.000</strong></div>
         <hr style="border:0.5px solid #eee; margin:8px 0;">
-        <div class="price-row" style="font-size:15px; font-weight:bold; color:#00880c;">
+        <div class="price-row" style="font-size:15px; font-weight:bold; color:#d32f2f;">
           <span>Total Pembayaran</span>
           <span id="totalBayar">Rp 0</span>
         </div>
-        <button class="btn-pesan" id="btnPesanAction" onclick="prosesPesanOrder()">PESAN SEKARANG</button>
+        <button class="btn-pesan" id="btnPesanAction" onclick="prosesPesanOrder()">PESAN MAKANAN SEKARANG</button>
       </div>
     </div>
   </div>
 
-  <!-- TRACKING PAGE -->
   <div class="tracking-page" id="trackingPage">
     <div class="page-header">
-      <span class="page-title" style="color:#00880c;">🛵 Driver Menuju Lokasi</span>
+      <span class="page-title" style="color:#d32f2f;">🛵 Driver Antarin Food Menuju Lokasi</span>
     </div>
     <div class="tracking-map-wrapper">
       <div id="trackingMapContainer"></div>
@@ -358,10 +357,9 @@
           <span class="driver-name">Joko Susilo</span>
           <span class="driver-vehicle">Honda Vario • B 4892 SKS</span>
         </div>
-        <span style="font-size:12px; font-weight:bold; color:#f57f17; background:#fff8e1; padding:4px 8px; border-radius:8px;">⭐ 4.9</span>
       </div>
       <div style="font-size:12px; color:#444; background:#f8f9fa; padding:10px; border-radius:10px;" id="trackingStatusText">
-        🛵 Driver sedang menuju lokasi penjemputan...
+        🛵 Driver sedang mengambil pesanan di resto...
       </div>
       <div class="action-row">
         <button class="btn-action-chat" onclick="alert('Buka Chat Driver')">💬 Chat Driver</button>
@@ -371,10 +369,8 @@
   </div>
 </div>
 
-<!-- JS MapLibre GL -->
 <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
 
-<!-- Firebase SDK & Modular Auth Integration -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
   import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
@@ -400,7 +396,6 @@
   window.firebaseSet = set;
 
   let googleUserTemp = null;
-
   window.loginGoogleAsli = function() {
     const provider = new GoogleAuthProvider();
     signInWithPopup(auth, provider)
@@ -415,18 +410,12 @@
           document.getElementById('authStepPhone').style.display = 'block';
         }
       })
-      .catch((error) => {
-        alert("Login Google Gagal: " + error.message);
-      });
+      .catch((error) => { alert("Login Google Gagal: " + error.message); });
   };
 
   window.simpanNomorHPProfil = function() {
     const noHp = document.getElementById('inputNoHPCustomer').value.trim();
-    if (!noHp || noHp.length < 10) {
-      alert("Masukkan nomor HP yang valid (minimal 10 digit).");
-      return;
-    }
-
+    if (!noHp || noHp.length < 10) { alert("Masukkan nomor HP yang valid (minimal 10 digit)."); return; }
     if (googleUserTemp) {
       localStorage.setItem('antarin_phone_' + googleUserTemp.email, noHp);
       localStorage.setItem('antarin_user', googleUserTemp.displayName + " - " + noHp);
@@ -438,9 +427,7 @@
     signOut(auth).then(() => {
       localStorage.removeItem('antarin_user');
       location.reload();
-    }).catch((error) => {
-      alert("Gagal keluar: " + error.message);
-    });
+    }).catch((error) => { alert("Gagal keluar: " + error.message); });
   };
 </script>
 
@@ -450,10 +437,11 @@
   let animFrameId;
   let debounceTimer;
 
-  let modeAktif = 'asal'; 
   let jenisLayanan = 'FOOD';
-  let tierBarang = 1;
   let metodePembayaran = 'CASH';
+  let terpilihMenuNama = "";
+  let terpilihMenuHarga = 0;
+  let terpilihRestoNama = "";
 
   let coordsAsal = [106.985000, -6.918800]; 
   let coordsTujuan = [106.928000, -6.921000];
@@ -467,10 +455,11 @@
     inisialisasiTombolBackHP();
   };
 
-  // --- CEGAH KELUAR APLIKASI SAAT TOMBOL BACK HP DITEKAN ---
   function inisialisasiTombolBackHP() {
     window.history.pushState({page: 'home'}, '', '');
     window.addEventListener('popstate', function(event) {
+      const foodHome = document.getElementById('foodHomePage');
+      const restoDetail = document.getElementById('restaurantDetailPage');
       const servicePage = document.getElementById('servicePage');
       const trackingPage = document.getElementById('trackingPage');
 
@@ -479,8 +468,11 @@
         pindahTab('beranda');
       } else if (servicePage.style.display === 'flex') {
         servicePage.style.display = 'none';
+      } else if (restoDetail.style.display === 'flex') {
+        restoDetail.style.display = 'none';
+      } else if (foodHome.style.display === 'flex') {
+        foodHome.style.display = 'none';
       } else {
-        // Jika di beranda tapi buka tab lain (riwayat/chat/akun), kembalikan ke beranda dulu
         pindahTab('beranda');
       }
       window.history.pushState({page: 'home'}, '', '');
@@ -520,6 +512,53 @@
     }
   }
 
+  // NAVIGASI ANTARIN FOOD
+  function bukaAntarinFoodHome() {
+    document.getElementById('foodHomePage').style.display = 'flex';
+  }
+  function tutupAntarinFoodHome() {
+    document.getElementById('foodHomePage').style.display = 'none';
+  }
+
+  function bukaDetailResto(namaResto, kategori) {
+    terpilihRestoNama = namaResto;
+    document.getElementById('restoDetailTitle').innerText = namaResto;
+    document.getElementById('restaurantDetailPage').style.display = 'flex';
+  }
+  function tutupDetailResto() {
+    document.getElementById('restaurantDetailPage').style.display = 'none';
+  }
+
+  function pilihMenuDanCheckout(namaMenu, hargaMenu) {
+    terpilihMenuNama = namaMenu;
+    terpilihMenuHarga = hargaMenu;
+    document.getElementById('summaryMenuText').innerText = `${namaMenu} (Rp ${hargaMenu.toLocaleString('id-ID')})`;
+    
+    document.getElementById('restaurantDetailPage').style.display = 'none';
+    document.getElementById('foodHomePage').style.display = 'none';
+    document.getElementById('servicePage').style.display = 'flex';
+
+    setTimeout(() => {
+      initMapGojekStyle();
+      hitungKalkulasiTarifOtomatis();
+    }, 200);
+  }
+
+  function bukaLayanan(jenis) {
+    if (!currentUser) { alert("Silakan login terlebih dahulu!"); document.getElementById('authScreen').style.display = 'flex'; return; }
+    if (jenis === 'FOOD') {
+      bukaAntarinFoodHome();
+      return;
+    }
+    jenisLayanan = jenis;
+    document.getElementById('servicePage').style.display = 'flex';
+    setTimeout(() => { initMapGojekStyle(); hitungKalkulasiTarifOtomatis(); }, 200);
+  }
+
+  function tutupLayanan() {
+    document.getElementById('servicePage').style.display = 'none';
+  }
+
   function catatRiwayat(judul, nominal, tipe) {
     const tanggalBaru = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
     riwayatTransaksi.unshift({ judul, nominal, tipe, tanggal: tanggalBaru });
@@ -532,7 +571,6 @@
       container.innerHTML = `<div style="text-align: center; color: #888; font-size: 13px; margin-top: 40px;">Belum ada riwayat pesanan.</div>`;
       return;
     }
-
     let html = '';
     riwayatTransaksi.forEach(item => {
       html += `
@@ -549,387 +587,113 @@
   }
 
   function initMapGojekStyle() {
-    if (map) {
-      map.resize();
-      return;
-    }
-
+    if (map) { map.resize(); return; }
     map = new maplibregl.Map({
       container: 'mapContainer',
       style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-      center: coordsAsal,
+      center: coordsTujuan,
       zoom: 15
     });
-
     map.on('load', function() {
       map.on('moveend', function () {
-        prosesAmbilAlamatTengahPeta();
+        const center = map.getCenter();
+        coordsTujuan = [center.lng, center.lat];
+        reverseGeocodeLokasiSpesifik(center.lat, center.lng);
       });
-
-      reverseGeocodeLokasiSpesifik(coordsAsal[1], coordsAsal[0], 'asal');
-      reverseGeocodeLokasiSpesifik(coordsTujuan[1], coordsTujuan[0], 'tujuan');
+      reverseGeocodeLokasiSpesifik(coordsTujuan[1], coordsTujuan[0]);
     });
   }
 
-  function prosesAmbilAlamatTengahPeta() {
-    const center = map.getCenter();
-    if (modeAktif === 'asal') {
-      coordsAsal = [center.lng, center.lat];
-      reverseGeocodeLokasiSpesifik(center.lat, center.lng, 'asal');
-    } else {
-      coordsTujuan = [center.lng, center.lat];
-      reverseGeocodeLokasiSpesifik(center.lat, center.lng, 'tujuan');
-    }
-    hitungKalkulasiTarifOtomatis();
-  }
-
-  async function reverseGeocodeLokasiSpesifik(lat, lon, target) {
+  async function reverseGeocodeLokasiSpesifik(lat, lon) {
     let fallbackText = `Lokasi (${lat.toFixed(5)}, ${lon.toFixed(5)})`;
-    if (target === 'asal') {
-      document.getElementById('lokasiAsal').value = fallbackText;
-    } else {
-      document.getElementById('lokasiTujuan').value = fallbackText;
-    }
-
+    document.getElementById('lokasiTujuan').value = fallbackText;
     try {
       const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`, {
         headers: { 'Accept-Language': 'id' }
       });
       const data = await response.json();
-      
       if (data && data.display_name) {
-        if (target === 'asal') {
-          document.getElementById('lokasiAsal').value = data.display_name;
-        } else {
-          document.getElementById('lokasiTujuan').value = data.display_name;
-        }
+        document.getElementById('lokasiTujuan').value = data.display_name;
       }
-    } catch (err) {
-      console.warn("Menggunakan koordinat cadangan lokal.");
-    }
-  }
-
-  function pilihModePeta(mode) {
-    modeAktif = mode;
-    document.getElementById('groupAsal').classList.remove('active-focus');
-    document.getElementById('groupTujuan').classList.remove('active-focus');
-
-    if (mode === 'asal') {
-      document.getElementById('groupAsal').classList.add('active-focus');
-      document.getElementById('pinLabelBadge').innerText = '📍 Atur Lokasi Asal';
-      document.getElementById('pinLabelBadge').style.background = '#7b1fa2';
-      document.getElementById('centerPinIcon').innerText = '💜';
-      document.getElementById('mapHintText').innerText = '📍 Geser peta untuk memilih Lokasi Resto / Penjemputan';
-      if (map) map.flyTo({ center: coordsAsal, zoom: 16 });
-    } else {
-      document.getElementById('groupTujuan').classList.add('active-focus');
-      document.getElementById('pinLabelBadge').innerText = '📍 Atur Lokasi Tujuan';
-      document.getElementById('pinLabelBadge').style.background = '#00880c';
-      document.getElementById('centerPinIcon').innerText = '🟢';
-      document.getElementById('mapHintText').innerText = '📍 Geser peta untuk memilih Lokasi Pengantaran Anda';
-      if (map) map.flyTo({ center: coordsTujuan, zoom: 16 });
-    }
-  }
-
-  function tampilkanMenuGPS(target) {
-    pilihModePeta(target);
-    const boxId = target === 'asal' ? 'autoBoxAsal' : 'autoBoxTujuan';
-    const boxResults = document.getElementById(boxId);
-
-    boxResults.innerHTML = `
-      <div class="autocomplete-gps-option" onclick="ambilLokasiGPS('${target}')">
-        📍 Gunakan Lokasi Saat Ini (GPS Perangkat)
-      </div>
-    `;
-    boxResults.style.display = 'block';
-  }
-
-  function ambilLokasiGPS(target) {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
-
-        if (target === 'asal') {
-          coordsAsal = [lon, lat];
-        } else {
-          coordsTujuan = [lon, lat];
-        }
-
-        if (map) map.flyTo({ center: [lon, lat], zoom: 16 });
-        reverseGeocodeLokasiSpesifik(lat, lon, target);
-        
-        document.getElementById('autoBoxAsal').style.display = 'none';
-        document.getElementById('autoBoxTujuan').style.display = 'none';
-        hitungKalkulasiTarifOtomatis();
-      }, () => {
-        alert("Gagal mendeteksi lokasi GPS. Pastikan izin lokasi aktif.");
-      });
-    } else {
-      alert("Browser tidak mendukung geolokasi.");
-    }
-  }
-
-  function liveSearchLokasi(query, target) {
-    clearTimeout(debounceTimer);
-    const boxId = target === 'asal' ? 'autoBoxAsal' : 'autoBoxTujuan';
-    const otherBoxId = target === 'asal' ? 'autoBoxTujuan' : 'autoBoxAsal';
-    const boxResults = document.getElementById(boxId);
-    document.getElementById(otherBoxId).style.display = 'none';
-
-    if (!query || query.length < 2) {
-      tampilkanMenuGPS(target);
-      return;
-    }
-
-    debounceTimer = setTimeout(async () => {
-      try {
-        let response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=id&limit=5&accept-language=id`);
-        let data = await response.json();
-
-        boxResults.innerHTML = `
-          <div class="autocomplete-gps-option" onclick="ambilLokasiGPS('${target}')">
-            📍 Gunakan Lokasi Saat Ini (GPS Perangkat)
-          </div>
-        `;
-
-        if (data && data.length > 0) {
-          data.forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'autocomplete-row';
-            div.innerText = item.display_name;
-            div.onclick = () => pilihSaranAlamat(item.display_name, parseFloat(item.lon), parseFloat(item.lat), target);
-            boxResults.appendChild(div);
-          });
-        }
-        boxResults.style.display = 'block';
-      } catch (err) {
-        console.error("Autocomplete Error:", err);
-      }
-    }, 300);
-  }
-
-  function pilihSaranAlamat(nama, lon, lat, target) {
-    if (target === 'asal') {
-      document.getElementById('lokasiAsal').value = nama;
-      document.getElementById('autoBoxAsal').style.display = 'none';
-      coordsAsal = [lon, lat];
-    } else {
-      document.getElementById('lokasiTujuan').value = nama;
-      document.getElementById('autoBoxTujuan').style.display = 'none';
-      coordsTujuan = [lon, lat];
-    }
-
-    if (map) map.flyTo({ center: [lon, lat], zoom: 16 });
-    hitungKalkulasiTarifOtomatis();
+    } catch (err) {}
   }
 
   function hitungJarakHaversine(lon1, lat1, lon2, lat2) {
     const R = 6371; 
     const dLat = (lat2 - lat1) * Math.PI / 180;
     const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-              Math.sin(dLon/2) * Math.sin(dLon/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    return (R * c); 
-  }
-
-  function pilihTierBarang(tier) {
-    tierBarang = tier;
-    const btn1 = document.getElementById('btnTier1');
-    const btn2 = document.getElementById('btnTier2');
-
-    if (tier === 1) {
-      btn1.style.background = '#e8f5e9'; btn1.style.color = '#00880c'; btn1.style.borderColor = '#00880c';
-      btn2.style.background = 'white'; btn2.style.color = '#555'; btn2.style.borderColor = '#ddd';
-    } else {
-      btn2.style.background = '#e8f5e9'; btn2.style.color = '#00880c'; btn2.style.borderColor = '#00880c';
-      btn1.style.background = 'white'; btn1.style.color = '#555'; btn1.style.borderColor = '#ddd';
-    }
-    hitungKalkulasiTarifOtomatis();
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+    return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
   }
 
   function pilihMetodeBayar(metode) {
     metodePembayaran = metode;
-    const btnCash = document.getElementById('btnPayCash');
-    const btnQris = document.getElementById('btnPayQris');
-
-    if (metode === 'CASH') {
-      btnCash.className = 'pay-opt-btn active'; btnQris.className = 'pay-opt-btn';
-    } else {
-      btnQris.className = 'pay-opt-btn active'; btnCash.className = 'pay-opt-btn';
-    }
+    document.getElementById('btnPayCash').className = metode === 'CASH' ? 'pay-opt-btn active' : 'pay-opt-btn';
+    document.getElementById('btnPayQris').className = metode === 'QRIS' ? 'pay-opt-btn active' : 'pay-opt-btn';
   }
 
   let totalBayarGlobal = 0;
-  let tarifOngkirGlobal = 0;
-  let namaLayananAktif = "Antarin Food";
-
   function hitungKalkulasiTarifOtomatis() {
     const jarakKM = hitungJarakHaversine(coordsAsal[0], coordsAsal[1], coordsTujuan[0], coordsTujuan[1]);
     const jarakFormatted = jarakKM < 0.5 ? 0.5 : jarakKM; 
-    
-    let tarifPerKM = 2000;    
-    let biayabase = 3000;     
-    let tarifMinimum = 8500;  
+    let totalOngkir = 4000 + (jarakFormatted * 2000);
+    if (totalOngkir < 9000) totalOngkir = 9000;
 
-    if (jenisLayanan === 'RIDE') {
-      tarifPerKM = 2500; biayabase = 4000; tarifMinimum = 9000;
-    } else if (jenisLayanan === 'SEND' || jenisLayanan === 'SHOP') {
-      if (tierBarang === 1) {
-        tarifPerKM = 2000; biayabase = 4000; tarifMinimum = 9000;
-      } else {
-        tarifPerKM = 3000; biayabase = 6500; tarifMinimum = 13000;
-      }
-    }
-
-    let totalOngkir = biayabase + (jarakFormatted * tarifPerKM);
-    if (totalOngkir < tarifMinimum) totalOngkir = tarifMinimum;
-
-    tarifOngkirGlobal = Math.round(totalOngkir);
-    const biayaAplikasi = 2000;
-    totalBayarGlobal = tarifOngkirGlobal + biayaAplikasi;
+    let tarifOngkir = Math.round(totalOngkir);
+    let biayaAplikasi = 2000;
+    totalBayarGlobal = terpilihMenuHarga + tarifOngkir + biayaAplikasi;
 
     document.getElementById('textJarakKM').innerText = jarakFormatted.toFixed(1) + " KM";
-    document.getElementById('textTarifOngkir').innerText = "Rp " + tarifOngkirGlobal.toLocaleString('id-ID');
+    document.getElementById('textTarifOngkir').innerText = "Rp " + tarifOngkir.toLocaleString('id-ID');
     document.getElementById('totalBayar').innerText = "Rp " + totalBayarGlobal.toLocaleString('id-ID');
   }
 
-  function bukaLayanan(jenis) {
-    if (!currentUser) {
-      alert("Silakan login terlebih dahulu untuk memesan layanan!");
-      document.getElementById('authScreen').style.display = 'flex';
-      return;
-    }
-
-    jenisLayanan = jenis;
-    document.getElementById('servicePage').style.display = 'flex';
-    
-    const pageHeader = document.getElementById('pageHeader');
-    const pageTitle = document.getElementById('pageTitle');
-    const btnPesanAction = document.getElementById('btnPesanAction');
-    const tierCard = document.getElementById('tierCard');
-    const tierLabelTitle = document.getElementById('tierLabelTitle');
-
-    if (jenis === 'SEND' || jenis === 'SHOP') {
-      tierCard.style.display = 'block';
-      tierBarang = 1;
-      pilihTierBarang(1);
-      tierLabelTitle.innerText = jenis === 'SEND' ? '📦 Ukuran / Berat Paket:' : '🛍️ Jumlah / Volume Belanjaan:';
-    } else {
-      tierCard.style.display = 'none';
-    }
-
-    if (jenis === 'FOOD') {
-      pageHeader.className = 'page-header theme-food'; pageTitle.innerText = 'Antarin Food (Pesan Makanan)'; namaLayananAktif = 'Antarin Food'; btnPesanAction.style.background = '#d32f2f';
-    } else if (jenis === 'RIDE') {
-      pageHeader.className = 'page-header theme-ride'; pageTitle.innerText = 'Antarin Ride (Ojek Motor)'; namaLayananAktif = 'Antarin Ride'; btnPesanAction.style.background = '#00880c';
-    } else if (jenis === 'SHOP') {
-      pageHeader.className = 'page-header theme-shop'; pageTitle.innerText = 'Antarin Shop (Belanja)'; namaLayananAktif = 'Antarin Shop'; btnPesanAction.style.background = '#7b1fa2';
-    } else if (jenis === 'SEND') {
-      pageHeader.className = 'page-header theme-send'; pageTitle.innerText = 'Antarin Send (Kirim Paket)'; namaLayananAktif = 'Antarin Send'; btnPesanAction.style.background = '#1976d2';
-    }
-
-    setTimeout(() => {
-      initMapGojekStyle();
-      pilihModePeta('asal');
-      hitungKalkulasiTarifOtomatis();
-    }, 200);
-  }
-
-  function tutupLayanan() {
-    document.getElementById('servicePage').style.display = 'none';
-  }
-
   function prosesPesanOrder() {
-    if (metodePembayaran === 'QRIS') {
-      window.snap.pay('SIMULASI_SNAP_TOKEN_DARI_SERVER', {
-        onSuccess: function(result) {
-          alert("Pembayaran QRIS Midtrans Berhasil!");
-          kirimDataKeFirebaseDanLanjut();
-        },
-        onPending: function() { alert("Menunggu pembayaran QRIS..."); },
-        onError: function() { alert("Pembayaran Midtrans Gagal!"); },
-        onClose: function() { alert("Pembayaran ditutup."); }
-      });
-      return;
-    }
-    kirimDataKeFirebaseDanLanjut();
-  }
-
-  function kirimDataKeFirebaseDanLanjut() {
-    if (!window.firebaseDb) {
-      alert("Koneksi database sedang dimuat.");
-      return;
-    }
-
+    if (!window.firebaseDb) { alert("Koneksi database sedang dimuat."); return; }
     const orderIdNum = Math.floor(1000 + Math.random() * 9000);
     const generatedPin = Math.floor(1000 + Math.random() * 9000).toString();
-    const asalVal = document.getElementById('lokasiAsal').value;
     const tujuanVal = document.getElementById('lokasiTujuan').value;
 
     window.firebaseSet(window.firebaseRef(window.firebaseDb, 'orders/' + orderIdNum), {
       id: orderIdNum,
       customer: currentUser || "Pelanggan",
-      layanan: namaLayananAktif,
-      pickup: asalVal,
+      layanan: "Antarin Food (" + terpilihMenuNama + ")",
+      pickup: terpilihRestoNama || "Resto Pilihan",
       destination: tujuanVal,
       total: totalBayarGlobal,
       pin: generatedPin,
       status: "COOKING",
       time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' WIB'
     }).then(() => {
-      catatRiwayat(namaLayananAktif + " (#" + orderIdNum + ")", totalBayarGlobal, "keluar");
+      catatRiwayat("Antarin Food (#" + orderIdNum + ")", totalBayarGlobal, "keluar");
       tutupLayanan();
       document.getElementById('trackingPage').style.display = 'flex';
       setTimeout(initTrackingMapGojek, 200);
-    }).catch((error) => {
-      alert("Gagal mengirim pesanan ke cloud: " + error.message);
-    });
+    }).catch((error) => { alert("Gagal mengirim pesanan: " + error.message); });
   }
 
   function initTrackingMapGojek() {
-    if (trackingMap) {
-      trackingMap.resize();
-      mulaiSimulasiDriverSmooth();
-      return;
-    }
-
+    if (trackingMap) { trackingMap.resize(); mulaiSimulasiDriverSmooth(); return; }
     trackingMap = new maplibregl.Map({
       container: 'trackingMapContainer',
       style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
       center: coordsAsal,
       zoom: 15
     });
-
     trackingMap.on('load', function() {
-      const elAsal = document.createElement('div'); elAsal.innerHTML = '💜'; elAsal.style.fontSize = '28px';
-      new maplibregl.Marker({ element: elAsal }).setLngLat(coordsAsal).addTo(trackingMap);
-
-      const elTujuan = document.createElement('div'); elTujuan.innerHTML = '🟢'; elTujuan.style.fontSize = '28px';
-      new maplibregl.Marker({ element: elTujuan }).setLngLat(coordsTujuan).addTo(trackingMap);
-
       const driverEl = document.createElement('div'); driverEl.innerHTML = '🛵'; driverEl.style.fontSize = '30px';
       driverMarker = new maplibregl.Marker({ element: driverEl }).setLngLat(coordsAsal).addTo(trackingMap);
-
       mulaiSimulasiDriverSmooth();
     });
   }
 
   function mulaiSimulasiDriverSmooth() {
     let progress = 0;
-    const speed = 0.005;
-
     function animate() {
-      progress += speed;
-      if (progress >= 1) {
-        document.getElementById('trackingStatusText').innerText = "✅ Driver Joko sudah tiba di lokasi!";
-        return;
-      }
+      progress += 0.005;
+      if (progress >= 1) { document.getElementById('trackingStatusText').innerText = "✅ Driver sudah tiba membawa pesanan!"; return; }
       const currentLng = coordsAsal[0] + (coordsTujuan[0] - coordsAsal[0]) * progress;
       const currentLat = coordsAsal[1] + (coordsTujuan[1] - coordsAsal[1]) * progress;
-
       driverMarker.setLngLat([currentLng, currentLat]);
       trackingMap.easeTo({ center: [currentLng, currentLat], duration: 0, animate: false });
       animFrameId = requestAnimationFrame(animate);
@@ -939,7 +703,7 @@
   }
 
   function selesaikanOrderan() {
-    alert("Pesanan Selesai! Terima kasih telah menggunakan Antarin.");
+    alert("Pesanan Selesai! Selamat menikmati makanan Anda.");
     if (animFrameId) cancelAnimationFrame(animFrameId);
     document.getElementById('trackingPage').style.display = 'none';
     pindahTab('riwayat');
