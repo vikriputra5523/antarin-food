@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Antarin - SuperApp Konsumen & Driver</title>
+  <title>Antarin - Konsumen</title>
 
   <!-- CSS MapLibre GL -->
   <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
@@ -140,17 +140,13 @@
     .action-row { display: flex; gap: 10px; }
     .btn-action-chat { flex: 1; background: #00880c; color: white; border: none; padding: 12px; border-radius: 20px; font-weight: bold; font-size: 12px; cursor: pointer; }
 
-    /* DRIVER DASHBOARD VIEW (MODE DRIVER NYATA) */
-    .driver-dashboard-view { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #f8f9fa; z-index: 120; display: none; flex-direction: column; overflow-y: auto; }
-    .order-item-driver { background: white; border-radius: 14px; border: 1px solid #e5e7eb; padding: 16px; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(0,0,0,0.02); display: flex; flex-direction: column; gap: 8px; }
-
-    /* MODAL MENCARI DRIVER / FORM TAMBAH ALAMAT */
+    /* MODAL MENCARI DRIVER */
     .searching-modal { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 150; display: none; align-items: center; justify-content: center; }
     .searching-card { background: white; padding: 24px; border-radius: 20px; width: 85%; max-width: 320px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
     .spinner { width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #00880c; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px auto; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    /* STYLE MENU AKUN ALA GOJEK */
+    /* STYLE MENU AKUN KONSUMEN */
     .akun-container { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
     .akun-card-profile { background: white; border-radius: 16px; padding: 18px; display: flex; align-items: center; gap: 16px; border: 1px solid #eee; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
     .akun-avatar-big { width: 56px; height: 56px; background: #00880c; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: bold; flex-shrink: 0; overflow: hidden; }
@@ -181,7 +177,7 @@
     <div class="searching-card">
       <div class="spinner"></div>
       <h3 style="font-size: 15px; font-weight: bold; color: #111; margin-bottom: 6px;">Mencari Driver Terdekat...</h3>
-      <p style="font-size: 12px; color: #666; margin-bottom: 16px;">Buka Mode Driver di menu Akun untuk menerima pesanan ini secara nyata!</p>
+      <p style="font-size: 12px; color: #666; margin-bottom: 16px;">Pesanan Anda telah dikirim ke sistem untuk diproses oleh mitra driver dan merchant.</p>
       <button onclick="batalkanPesananOlehCustomer()" style="background: #ffebee; border: 1px solid #d32f2f; color: #d32f2f; padding: 10px 16px; border-radius: 12px; font-size: 12px; font-weight: bold; width: 100%; cursor: pointer;">Batalkan Pesanan</button>
     </div>
   </div>
@@ -418,14 +414,6 @@
         <button onclick="alert('Tukar coins dengan diskon perjalanan segera hadir!')" style="background: white; color: #00880c; border: none; padding: 8px 12px; border-radius: 12px; font-size: 11px; font-weight: bold; cursor: pointer;">Tukar ›</button>
       </div>
 
-      <!-- MENU KHUSUS MODE DRIVER (MENJADIKAN NYATA TANPA SIMULASI) -->
-      <div class="akun-menu-group" style="border: 2px solid #00880c;">
-        <div class="akun-menu-item" onclick="bukaModeDriver()" style="background: #e8f5e9;">
-          <div class="akun-menu-left"><span class="akun-menu-icon">🛵</span> <b>Buka Mode Driver (Terima Order Real)</b></div>
-          <span style="color:#00880c; font-weight: bold;">Mulai ›</span>
-        </div>
-      </div>
-
       <div class="akun-menu-group">
         <div class="akun-menu-item" onclick="bukaSubAkun('alamat')">
           <div class="akun-menu-left"><span class="akun-menu-icon">📍</span> Alamat Tersimpan</div>
@@ -453,17 +441,6 @@
       </div>
 
       <button class="auth-btn" style="border-color: #d32f2f; color: #d32f2f; margin-top: 4px;" onclick="logoutAkun()">🚪 Keluar dari Akun</button>
-    </div>
-  </div>
-
-  <!-- VIEW 5: MODE DRIVER (DASHBOARD DRIVER NYATA) -->
-  <div class="driver-dashboard-view" id="driverDashboardView">
-    <div class="page-header" style="background: #00880c; position: sticky; top:0; z-index:130;">
-      <button class="btn-back" onclick="tutupModeDriver()">←</button>
-      <span class="page-title">Dashboard Mitra Driver (Real-time)</span>
-    </div>
-    <div style="padding: 16px; display: flex; flex-direction: column; gap: 12px;" id="driverOrderListContainer">
-      <div style="text-align:center; color:#666; font-size:13px; margin-top:30px;">Mendengarkan pesanan masuk dari server Firebase...</div>
     </div>
   </div>
 
@@ -528,7 +505,7 @@
       <span class="page-title">Ketentuan Layanan</span>
     </div>
     <div style="padding: 16px; font-size: 12px; color: #555; line-height: 1.6; display: flex; flex-direction: column; gap: 10px;">
-      <p><b>Ketentuan Layanan Antarin SuperApp 2026</b></p>
+      <p><b>Ketentuan Layanan Antarin Konsumen 2026</b></p>
       <p>Dengan menggunakan aplikasi Antarin, Anda menyetujui seluruh syarat dan ketentuan yang berlaku.</p>
     </div>
   </div>
@@ -666,7 +643,7 @@
 <!-- Firebase SDK -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-  import { getDatabase, ref, set, onValue, remove, update } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+  import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
   import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 
   const firebaseConfig = {
@@ -689,7 +666,6 @@
   window.firebaseSet = set;
   window.firebaseOnValue = onValue;
   window.firebaseRemove = remove;
-  window.firebaseUpdate = update;
 
   let googleUserTemp = null;
 
@@ -793,7 +769,6 @@
     cekStatusLogin();
     renderRiwayatTransaksi();
     inisialisasiTombolBackHP();
-    inisialisasiListenerDriverDashboard();
   };
 
   // --- MANAJEMEN ALAMAT TERSIMPAN ---
@@ -904,81 +879,8 @@
     }
   }
 
-  // --- MODE DRIVER NYATA (TERINTEGRASI DI FIREBASE) ---
-  function bukaModeDriver() {
-    document.getElementById('driverDashboardView').style.display = 'flex';
-  }
-  function tutupModeDriver() {
-    document.getElementById('driverDashboardView').style.display = 'none';
-  }
-
-  function inisialisasiListenerDriverDashboard() {
-    if (!window.firebaseDb) return;
-    const ordersRef = window.firebaseRef(window.firebaseDb, 'orders');
-    window.firebaseOnValue(ordersRef, (snapshot) => {
-      const data = snapshot.val();
-      const container = document.getElementById('driverOrderListContainer');
-      if (!data) {
-        container.innerHTML = `<div style="text-align:center; color:#666; font-size:13px; margin-top:30px;">Belum ada pesanan baru dari pelanggan.</div>`;
-        return;
-      }
-
-      let html = '';
-      for (let orderId in data) {
-        let ord = data[orderId];
-        if (ord.status === 'SEARCHING') {
-          html += `
-            <div class="order-item-driver">
-              <div style="font-size:14px; font-weight:bold; color:#00880c;">🔔 Order #${ord.id} - ${ord.layanan}</div>
-              <div style="font-size:12px; color:#333;"><b>Pemesan:</b> ${ord.customer} (${ord.customerPhone})</div>
-              <div style="font-size:11px; color:#666;"><b>Jemput:</b> ${ord.pickup}</div>
-              <div style="font-size:11px; color:#666;"><b>Tujuan:</b> ${ord.destination}</div>
-              <div style="font-size:13px; font-weight:bold; color:#111; margin-top:4px;">Total: Rp ${ord.total.toLocaleString('id-ID')}</div>
-              <button onclick="terimaOrderSebagaiDriver('${ord.id}')" style="background:#00880c; color:white; border:none; padding:10px; border-radius:10px; font-weight:bold; font-size:12px; margin-top:6px; cursor:pointer;">Terima Order Ini</button>
-            </div>
-          `;
-        }
-      }
-      container.innerHTML = html || `<div style="text-align:center; color:#666; font-size:13px; margin-top:30px;">Tidak ada pesanan yang sedang mencari driver.</div>`;
-    });
-  }
-
-  window.terimaOrderSebagaiDriver = function(orderId) {
-    const driverName = currentUser ? currentUser.split(' - ')[0] : "Budi Driver";
-    const driverPhone = currentUser ? currentUser.split(' - ')[1] : "081298765432";
-    const driverVehicle = "Honda Beat • F 1234 AB";
-
-    window.firebaseUpdate(window.firebaseRef(window.firebaseDb, 'orders/' + orderId), {
-      status: 'ACCEPTED',
-      driverName: driverName,
-      driverPhone: driverPhone,
-      driverVehicle: driverVehicle
-    }).then(() => {
-      alert("Order berhasil diterima! Anda bertindak sebagai Driver.");
-      tutupModeDriver();
-      mulaiBroadcastGPSDriver(orderId);
-    });
-  };
-
-  function mulaiBroadcastGPSDriver(orderId) {
-    alert("Broadcast GPS Driver Aktif. Lokasi Anda dikirim ke server secara nyata.");
-    // Kirim update posisi secara real-time (bisa menggunakan real geolocation watchPosition atau interval bergerak)
-    if (navigator.geolocation) {
-      navigator.geolocation.watchPosition((position) => {
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
-        window.firebaseUpdate(window.firebaseRef(window.firebaseDb, 'orders/' + orderId), {
-          driverCoords: [lon, lat]
-        });
-      }, (err) => {
-        // Fallback jika GPS tidak aktif
-        console.log("GPS perangkat tidak aktif, menggunakan koordinat simulasi rute.");
-      }, { enableHighAccuracy: true });
-    }
-  }
-
   function tampilkanView(viewId) {
-    document.querySelectorAll('.app-view, .food-home-page, .restaurant-detail-page, .service-page, .tracking-page, .sub-akun-page, .driver-dashboard-view').forEach(v => {
+    document.querySelectorAll('.app-view, .food-home-page, .restaurant-detail-page, .service-page, .tracking-page, .sub-akun-page').forEach(v => {
       v.style.display = 'none';
       v.classList.remove('active');
     });
@@ -1031,9 +933,7 @@
   function kembaliKeSebelumnya() {
     const searchModal = document.getElementById('searchingModal');
     const modalAlamat = document.getElementById('modalFormAlamat');
-    const driverDash = document.getElementById('driverDashboardView');
 
-    if (driverDash.style.display === 'flex') { tutupModeDriver(); return; }
     if (modalAlamat.style.display === 'flex') { tutupFormAlamat(); return; }
     if (searchModal.style.display === 'flex') { batalkanPesananOlehCustomer(); return; }
 
